@@ -1,0 +1,42 @@
+# ~/.config/starship.toml
+
+# Show the user
+[username]
+format = '[🧉$user](bold blue) '
+disabled = false
+show_always = true
+
+# Show the host
+[hostname]
+ssh_only = false
+format = '[💻$hostname](bold red) '
+disabled = false
+
+# Show path
+[directory]
+truncation_length = 1
+truncation_symbol = '…/'
+format = '[📂$path]($style) '
+disabled = false
+
+# Show time
+[time]
+format = '[🗓️ $time](bold green) '
+time_format = '%F 🕙%T'
+disabled = false
+
+# Show OS
+[os]
+format = '[($symbol$name)](bold blue) '
+disabled = false
+
+[os.symbols]
+# Macos = ''
+# Raspbian = 'π'
+# Debian = '∂'
+Macos = '🍎'
+Raspbian = '🍓'
+Debian = '🌀'
+
+[line_break]
+disabled = true

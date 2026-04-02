@@ -1,0 +1,14 @@
+# Add this to ghostty settings (at the end): config-file variable value needs to be: ~/.config/ghostty/config
+
+# Change font, size
+font-family = Hack Nerd Font Mono
+font-size = 14
+
+# Change theme
+theme = Material Darker
+
+# Enable backsapce on ssh session
+shell-integration-features = ssh-terminfo
+
+# Opacity for non-focused panes
+unfocused-split-opacity = 0.5
