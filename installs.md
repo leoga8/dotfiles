@@ -1,0 +1,29 @@
+- Install omz: sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+- Install Hombrew: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+	- brew install --cask rectangle
+	- brew install --cask ghostty
+	- brew install --cask spotify
+	- brew install --cask discord
+	- brew install --cask google-chrome
+	- brew install --cask obsidian
+	- brew install --cask slack
+	- brew install --cask wireshark-app
+	- brew install --cask zoom
+	- brew install --cask 1password
+	- brew install --cask shottr
+	- brew install --cask appcleaner
+	- brew install --cask tunnelblick
+	- brew install jq
+	- brew install fzf
+	- brew install tmux
+	- brew install nvim
+	- brew install fastfetch
+	- brew install lazygit
+	- brew install opencode
+	- brew install starship
+	- brew install speedtest-cli
+	- brew install chafa
+	- brew install slides
+	- brew install stow
+	- brew install tree-sitter-cli
+- Install tpm: git clone https://github.com/tmux-plugins/tpm ~/.config/tmux/plugins/tpm
