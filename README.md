@@ -8,6 +8,7 @@ Personal dotfiles managed with [GNU Stow](https://www.gnu.org/software/stow/).
 - `starship` — `~/.config/starship.toml`
 - `ghostty` — `~/.config/ghostty/config`
 - `nvim` — `~/.config/nvim/`
+- `zsh` — `~/.zshrc`
 
 ---
 
@@ -37,6 +38,7 @@ stow --no-folding --target=$HOME tmux
 stow --no-folding --target=$HOME starship
 stow --no-folding --target=$HOME ghostty
 stow --no-folding --target=$HOME nvim
+stow --no-folding --target=$HOME zsh
 ```
 
 This creates symlinks from `~/.config/` back into `~/.dotfiles/`.
@@ -47,17 +49,17 @@ This creates symlinks from `~/.config/` back into `~/.dotfiles/`.
 
 Use `mv` to move the original file into the repo, preserving the path structure relative to `$HOME`, then stow it.
 
-Example for `.zshrc`:
+Example for a new config at `~/.config/foo/config`:
 
 ```bash
-mkdir -p ~/.dotfiles/zsh
-mv ~/.zshrc ~/.dotfiles/zsh/.zshrc
+mkdir -p ~/.dotfiles/foo/.config/foo
+mv ~/.config/foo/config ~/.dotfiles/foo/.config/foo/config
 
 cd ~/.dotfiles
-stow --no-folding --target=$HOME zsh
+stow --no-folding --target=$HOME foo
 
 git add .
-git commit -m "add zsh config"
+git commit -m "add foo config"
 git push
 ```
 
@@ -112,6 +114,8 @@ rm ~/.config/tmux/tmux.conf       # if it's a regular file
 unlink ~/.config/starship.toml
 unlink ~/.config/ghostty/config
 rm -rf ~/.config/nvim
+unlink ~/.zshrc
+rm ~/.zshrc                       # if it's a regular file
 ```
 
 ### 3. Stow the configs
@@ -122,6 +126,7 @@ stow --no-folding --target=$HOME tmux
 stow --no-folding --target=$HOME starship
 stow --no-folding --target=$HOME ghostty
 stow --no-folding --target=$HOME nvim
+stow --no-folding --target=$HOME zsh
 ```
 
 ### 4. Pull future changes
@@ -132,3 +137,9 @@ Once set up, keeping in sync with the latest changes is just:
 cd ~/.dotfiles
 git pull
 ```
+
+---
+
+## Software installs
+
+See [installs.md](./installs.md) for all the commands to install software and tools on a new machine.
