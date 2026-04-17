@@ -90,6 +90,7 @@ plugins=(
 ##### Leo config #####
 ZSH_WEB_SEARCH_ENGINES=(reddit "https://www.reddit.com/search/?q=")
 source $ZSH/oh-my-zsh.sh
+source $(brew --prefix)/opt/zsh-vi-mode/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
 ######################
 
 # User configuration
