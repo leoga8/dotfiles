@@ -6,6 +6,7 @@
 export ZSH="$HOME/.oh-my-zsh"
 
 ##### Leo config #####
+unsetopt BANG_HIST
 export PATH="/opt/homebrew/bin:$PATH"
 # export OPENCODE_CONFIG_DIR="$HOME/.config/opencode"
 if [[ -f ~/.secrets ]]; then

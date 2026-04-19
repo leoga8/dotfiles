@@ -4,7 +4,8 @@
 	- brew install --cask ghostty
 	- brew install --cask spotify
 	- brew install --cask discord
-	- brew install --cask google-chrome
+	- brew install --cask brave-browser
+	- brew install --cask readdle-spark
 	- brew install --cask obsidian
 	- brew install --cask slack
 	- brew install --cask wireshark-app
