@@ -16,6 +16,7 @@
 	- brew install --cask tunnelblick
 	- brew install jq
 	- brew install fzf
+	- brew install fd
 	- brew install tmux
 	- brew install nvim
 	- brew install fastfetch

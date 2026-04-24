@@ -96,7 +96,10 @@ return {
     opts = {
       picker = {
         sources = {
-          files = { hidden = true },
+          files = {
+            cmd = 'fd',
+            args = { '--type', 'f', '--type', 'l', '--color', 'never', '-E', '.git', '--hidden' },
+          },
         },
       },
       dashboard = {

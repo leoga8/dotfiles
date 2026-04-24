@@ -6,7 +6,6 @@
 export ZSH="$HOME/.oh-my-zsh"
 
 ##### Leo config #####
-unsetopt BANG_HIST
 export PATH="/opt/homebrew/bin:$PATH"
 # export OPENCODE_CONFIG_DIR="$HOME/.config/opencode"
 if [[ -f ~/.secrets ]]; then
@@ -91,7 +90,6 @@ plugins=(
 ##### Leo config #####
 ZSH_WEB_SEARCH_ENGINES=(reddit "https://www.reddit.com/search/?q=")
 source $ZSH/oh-my-zsh.sh
-source $(brew --prefix)/opt/zsh-vi-mode/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
 ######################
 
 # User configuration
@@ -123,4 +121,6 @@ source $(brew --prefix)/opt/zsh-vi-mode/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
 ##### Leo config #####
 eval "$(fzf --zsh)"
 eval "$(starship init zsh)"
+source $(brew --prefix)/opt/zsh-vi-mode/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
+# zvm_after_init_commands+=('eval "$(fzf --zsh)"')
 ######################
