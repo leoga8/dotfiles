@@ -9,6 +9,16 @@ Personal dotfiles managed with [GNU Stow](https://www.gnu.org/software/stow/).
 - `ghostty` — `~/.config/ghostty/config`
 - `nvim` — `~/.config/nvim/`
 - `zsh` — `~/.zshrc`
+- `claude` — `~/.claude/commands/` (global Claude Code slash commands)
+- `opencode` — `~/.config/opencode/` and `~/.opencode/commands/` (OpenCode config + slash commands)
+
+---
+
+## Workflows
+
+The `workflows/` directory is a tool-agnostic library of reusable AI workflow definitions (Obsidian, coding projects, etc.). It is **not** a stow package — it stays in `~/.dotfiles/workflows/` and is referenced by the slash command shims in the `claude` and `opencode` packages.
+
+See [workflows/README.md](./workflows/README.md) for the full breakdown.
 
 ---
 
@@ -30,7 +40,22 @@ sudo apt install stow
 git clone git@github.com:leoga8/dotfiles.git ~/.dotfiles
 ```
 
-### 3. Stow the configs
+### 3. Remove any existing configs that would conflict
+
+Before stowing, remove any existing files that stow would try to overwrite. Use `unlink` for symlinks and `rm` for regular files:
+
+```bash
+unlink ~/.config/tmux/tmux.conf   # if it's a symlink
+rm ~/.config/tmux/tmux.conf       # if it's a regular file
+
+unlink ~/.config/starship.toml
+unlink ~/.config/ghostty/config
+rm -rf ~/.config/nvim
+unlink ~/.zshrc
+rm ~/.zshrc                       # if it's a regular file
+```
+
+### 4. Stow the configs
 
 ```bash
 cd ~/.dotfiles
@@ -39,9 +64,11 @@ stow --no-folding --target=$HOME starship
 stow --no-folding --target=$HOME ghostty
 stow --no-folding --target=$HOME nvim
 stow --no-folding --target=$HOME zsh
+stow --no-folding --target=$HOME claude
+stow --no-folding --target=$HOME opencode
 ```
 
-This creates symlinks from `~/.config/` back into `~/.dotfiles/`.
+This creates symlinks from `$HOME` back into `~/.dotfiles/`.
 
 ---
 
@@ -78,7 +105,7 @@ git push
 
 ## Day to day
 
-Configs are symlinked so any edits made in `~/.config/` are automatically reflected in `~/.dotfiles/`. Just commit and push periodically:
+Configs are symlinked so any edits made in `~/.config/` (or `~/.zshrc`, `~/.claude/`, etc.) are automatically reflected in `~/.dotfiles/`. Just commit and push periodically:
 
 ```bash
 cd ~/.dotfiles
@@ -87,51 +114,7 @@ git commit -m "describe what changed"
 git push
 ```
 
----
-
-## Using dotfiles on another machine
-
-### 1. Install Stow and clone the repo
-
-```bash
-# macOS
-brew install stow
-
-# Debian/Ubuntu
-sudo apt install stow
-
-git clone git@github.com:leoga8/dotfiles.git ~/.dotfiles
-```
-
-### 2. Remove any existing configs that would conflict
-
-Before stowing, remove any existing files or directories that stow would try to overwrite. Use `unlink` for symlinks and `rm` for regular files:
-
-```bash
-unlink ~/.config/tmux/tmux.conf   # if it's a symlink
-rm ~/.config/tmux/tmux.conf       # if it's a regular file
-
-unlink ~/.config/starship.toml
-unlink ~/.config/ghostty/config
-rm -rf ~/.config/nvim
-unlink ~/.zshrc
-rm ~/.zshrc                       # if it's a regular file
-```
-
-### 3. Stow the configs
-
-```bash
-cd ~/.dotfiles
-stow --no-folding --target=$HOME tmux
-stow --no-folding --target=$HOME starship
-stow --no-folding --target=$HOME ghostty
-stow --no-folding --target=$HOME nvim
-stow --no-folding --target=$HOME zsh
-```
-
-### 4. Pull future changes
-
-Once set up, keeping in sync with the latest changes is just:
+To pull updates on another machine:
 
 ```bash
 cd ~/.dotfiles

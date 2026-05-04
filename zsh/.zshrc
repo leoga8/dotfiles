@@ -121,6 +121,4 @@ source $ZSH/oh-my-zsh.sh
 ##### Leo config #####
 eval "$(fzf --zsh)"
 eval "$(starship init zsh)"
-source $(brew --prefix)/opt/zsh-vi-mode/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
-# zvm_after_init_commands+=('eval "$(fzf --zsh)"')
 ######################

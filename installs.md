@@ -1,7 +1,7 @@
 - Install omz: sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 - Install Hombrew: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 	- brew install --cask rectangle
-	- brew install --cask ghostty
+	- brew install --cask warp
 	- brew install --cask spotify
 	- brew install --cask discord
 	- brew install --cask brave-browser
@@ -28,5 +28,4 @@
 	- brew install slides
 	- brew install stow
 	- brew install tree-sitter-cli
-	- brew install zsh-vi-mode
 - Install tpm: git clone https://github.com/tmux-plugins/tpm ~/.config/tmux/plugins/tpm
