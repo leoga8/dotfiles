@@ -1,1 +1,1 @@
-@~/workflows/obsidian/inbox-process/prompts/inbox.md
+@~/.dotfiles/workflows/obsidian/inbox-process/prompts/inbox.md

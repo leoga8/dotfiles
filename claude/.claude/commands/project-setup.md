@@ -1,1 +1,1 @@
-@~/workflows/code/project-setup/prompts/project-setup.md
+@~/.dotfiles/workflows/code/project-setup/prompts/project-setup.md

@@ -1,1 +1,1 @@
-@~/workflows/obsidian/bills/prompts/bills.md
+@~/.dotfiles/workflows/obsidian/bills/prompts/bills.md

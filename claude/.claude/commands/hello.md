@@ -1,1 +1,1 @@
-@~/workflows/obsidian/daily-open/prompts/hello.md
+@~/.dotfiles/workflows/obsidian/daily-open/prompts/hello.md
