@@ -56,7 +56,7 @@ Cross-check each note's frontmatter against these. Flag any missing required fie
 ## steps
 
 ### 1. list inbox
-- Run `tools/list-inbox.sh <vault-root>`
+- Run `~/.dotfiles/workflows/obsidian/inbox-process/tools/list-inbox.sh <vault-root>`
 - If empty: report and exit
 - If files found: proceed to step 2
 
@@ -74,6 +74,6 @@ Cross-check each note's frontmatter against these. Flag any missing required fie
 ### 4. apply
 - For each approved file:
   - If missing frontmatter fields: add them (with empty values for user to fill, except where a sensible default exists)
-  - Run `tools/move-note.sh <vault-root> "<filename>" "<destination>"` to move the file
+  - Run `~/.dotfiles/workflows/obsidian/inbox-process/tools/move-note.sh <vault-root> "<filename>" "<destination>"` to move the file
   - Report each result
 - For daily notes: construct the correct nested path `raw/daily/YYYY/MM/` from the note's `date` field before moving

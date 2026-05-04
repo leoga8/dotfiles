@@ -19,9 +19,9 @@
 ## steps
 
 ### 1. process inbox
-- Run `workflows/obsidian/inbox-process/tools/list-inbox.sh <vault-root>`
+- Run `~/.dotfiles/workflows/obsidian/inbox-process/tools/list-inbox.sh <vault-root>`
 - If empty: note it and proceed to step 2
-- If files found: follow the full inbox-process workflow (`workflows/obsidian/inbox-process/prompts/inbox.md`) — classify, validate frontmatter, present summary table, move after confirmation
+- If files found: follow the full inbox-process workflow (`~/.dotfiles/workflows/obsidian/inbox-process/prompts/inbox.md`) — classify, validate frontmatter, present summary table, move after confirmation
 
 ### 2. review today's session
 - Look for today's daily note at `raw/daily/YYYY/MM/YYYY-MM-DD.md` (substitute actual date)
@@ -48,8 +48,8 @@
 - Propose any corrections
 
 ### 5. sync workflows/README.md
-- Read `workflows/README.md`
-- Compare the workflow tree against the actual `workflows/` directory structure — propose any structural updates needed
+- Read `~/.dotfiles/workflows/README.md`
+- Compare the workflow tree against the actual `~/.dotfiles/workflows/` directory structure — propose any structural updates needed
 - Check the `### current slash commands` table: scan all prompt files for their `**Suggested command:**` line and verify every one appears in the table
 - If any are missing or mismatched: propose the corrected table rows
 - Apply all updates after confirmation

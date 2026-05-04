@@ -194,7 +194,11 @@ table without id
 from !"raw/templates"
 where (contains(file.tags, "task") or contains(file.tags, "project"))
 	and due
-	and due <= date(today)
+	and (
+		due.year < date(today).year
+		or (due.year = date(today).year and due.month < date(today).month)
+		or (due.year = date(today).year and due.month = date(today).month and due.day <= date(today).day)
+	)
 	and status = "active"
 sort priority asc
 \```
@@ -257,7 +261,11 @@ table without id
 from !"raw/templates"
 where (contains(file.tags, "task") or contains(file.tags, "project"))
 	and due
-	and due <= date(today)
+	and (
+		due.year < date(today).year
+		or (due.year = date(today).year and due.month < date(today).month)
+		or (due.year = date(today).year and due.month = date(today).month and due.day <= date(today).day)
+	)
 	and status = "active"
 sort priority asc
 \```
@@ -367,7 +375,15 @@ Key conventions:
 - Use tag filters in `where` clause: `contains(file.tags, "task")`
 - Date comparisons on daily notes: use component matching (`this.date.year` / `.month` / `.day`) — date arithmetic with `dur()` does not work reliably
 - `status` and `priority` are plain string properties, not tags
-- Always null-check `due` before date comparisons: `and due and due <= date(today)` — notes with empty or missing `due` fields leak through otherwise
+- Always null-check `due` before date comparisons, then use component matching — `due <= date(today)` fails for same-day items when `due` stores a datetime (e.g. `YYYY-MM-DDTHH:MM:SS`):
+  ```
+  and due
+  and (
+    due.year < date(today).year
+    or (due.year = date(today).year and due.month < date(today).month)
+    or (due.year = date(today).year and due.month = date(today).month and due.day <= date(today).day)
+  )
+  ```
 
 ## recurring processes
 
@@ -479,4 +495,4 @@ sort status asc
 - `paid` not `payed` in bill frontmatter
 - Due dates use timestamp format: `YYYY-MM-DDTHH:MM:SS`
 - Dataview tag filters use `contains(file.tags, "x")` — never `#x` in `where` clause
-- Always null-check `due` before comparisons
+- Always null-check `due` then use component matching (`due.year`, `.month`, `.day`) — `due <= date(today)` breaks for same-day items when `due` is a datetime

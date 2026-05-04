@@ -1,7 +1,7 @@
 # vault-setup
 
 > Sets up a new Obsidian vault from scratch, or audits and migrates an existing vault to this structure.
-> Read `data/reference.md` in this workflow folder before proceeding — it contains the canonical structure, schemas, templates, and conventions.
+> Read `~/.dotfiles/workflows/obsidian/vault-setup/data/reference.md` before proceeding — it contains the canonical structure, schemas, templates, and conventions.
 
 **Suggested command:** `/vault-setup`
 
@@ -9,7 +9,7 @@
 
 ## operating rules
 
-- Read `data/reference.md` before proceeding — it is the single source of truth for this workflow
+- Read `~/.dotfiles/workflows/obsidian/vault-setup/data/reference.md` before proceeding — it is the single source of truth for this workflow
 - Never create or modify files without explicit approval
 - Always propose before acting — present a full plan and wait for confirmation
 - Work through changes incrementally — never apply a large batch without a clear summary first
@@ -45,7 +45,7 @@ Ask the following questions before taking any action. Wait for all answers befor
 
 Skip this phase for greenfield — go directly to phase 3.
 
-Using the output from context gathering and the canonical structure in `data/reference.md`:
+Using the output from context gathering and the canonical structure in `~/.dotfiles/workflows/obsidian/vault-setup/data/reference.md`:
 
 - Compare the existing structure against the target structure
 - Check each component: folders, templates, AGENTS.md, me.md, home.md, maps, hubs
@@ -66,14 +66,14 @@ Using the output from context gathering and the canonical structure in `data/ref
 
 ### greenfield — apply in this order, one step at a time with approval at each
 
-1. Run `tools/scaffold-vault.sh <vault-root>` to create all folders
-2. Create `raw/templates/` files — use templates from `data/reference.md`, adapt to vault type (personal vs work) and active domains
-3. Create `AGENTS.md` — use the template from `data/reference.md`, fill in vault tree and active schemas only
-4. Create `me.md` — use the template from `data/reference.md`, prompt the user for their identity, work, and focus details
+1. Run `~/.dotfiles/workflows/obsidian/vault-setup/tools/scaffold-vault.sh <vault-root>` to create all folders
+2. Create `raw/templates/` files — use templates from `~/.dotfiles/workflows/obsidian/vault-setup/data/reference.md`, adapt to vault type (personal vs work) and active domains
+3. Create `AGENTS.md` — use the template from `~/.dotfiles/workflows/obsidian/vault-setup/data/reference.md`, fill in vault tree and active schemas only
+4. Create `me.md` — use the template from `~/.dotfiles/workflows/obsidian/vault-setup/data/reference.md`, prompt the user for their identity, work, and focus details
 5. Create `CLAUDE.md` — single line: `@AGENTS.md`
-6. Create `home.md` — use queries from `data/reference.md`, embed active hubs only
+6. Create `home.md` — use queries from `~/.dotfiles/workflows/obsidian/vault-setup/data/reference.md`, embed active hubs only
 7. Create hub and map files for each active domain — follow the hub/raw/maps pattern
-8. Create `workflows/` folder and copy this workflow into it
+8. Wire up slash commands: create `~/.claude/commands/` and/or `~/.opencode/commands/` shims pointing to `~/.dotfiles/workflows/` prompts (see `~/.dotfiles/workflows/README.md` for the full command list)
 9. Final check: open `home.md` mentally and confirm all embeds and queries are consistent
 
 ### migration — apply in this order, one section at a time with approval at each
@@ -98,5 +98,5 @@ Once setup is complete:
 - Remind the user to:
   - Fill in `me.md` with personal details
   - Set up `.claude/commands/` and/or `.opencode/commands/` for slash command activation
-  - Copy the `workflows/` folder from this vault if they want the full workflow system
+  - Ensure `~/.dotfiles/workflows/` slash commands are wired up (`~/.claude/commands/` and/or `~/.opencode/commands/`) — see `~/.dotfiles/workflows/README.md`
   - Run `/hello` at the start of each session and `/wrap-up` at the end

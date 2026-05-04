@@ -1,7 +1,7 @@
 # project-setup
 
 > Bootstraps a new coding project with standard structure, AI conventions, and language-appropriate tooling.
-> Read `data/reference.md` in this workflow folder before proceeding — it contains all templates and conventions.
+> Read `~/.dotfiles/workflows/code/project-setup/data/reference.md` before proceeding — it contains all templates and conventions.
 
 **Suggested command:** `/project-setup`
 
@@ -9,7 +9,7 @@
 
 ## operating rules
 
-- Read `data/reference.md` before proceeding — it is the single source of truth for templates and conventions
+- Read `~/.dotfiles/workflows/code/project-setup/data/reference.md` before proceeding — it is the single source of truth for templates and conventions
 - Never create files without explicit approval
 - Always show the full scaffold plan and wait for confirmation before touching the filesystem
 - Work through implementation one step at a time — confirm each step before proceeding
@@ -33,7 +33,7 @@ Ask the following questions before taking any action. Wait for all answers befor
 
 ## phase 2: plan
 
-Using the answers from phase 1 and the templates in `data/reference.md`, present the full scaffold before doing anything:
+Using the answers from phase 1 and the templates in `~/.dotfiles/workflows/code/project-setup/data/reference.md`, present the full scaffold before doing anything:
 
 - Show the complete folder tree that will be created
 - List all files that will be generated and their source template
@@ -50,16 +50,16 @@ Wait for explicit confirmation before moving to phase 3.
 Apply in this order, one step at a time with confirmation at each:
 
 ### step 1 — scaffold folders
-Run `tools/scaffold-project.sh <project-root> <language>` to create the folder structure.
+Run `~/.dotfiles/workflows/code/project-setup/tools/scaffold-project.sh <project-root> <language>` to create the folder structure.
 
 ### step 2 — language config
-Create the language-specific config file using templates from `data/reference.md`:
+Create the language-specific config file using templates from `~/.dotfiles/workflows/code/project-setup/data/reference.md`:
 - **Python** → `pyproject.toml` (uv-compatible, hatchling build backend), `src/<package>/` with `__init__.py`
 - **Bash** → no config file needed; create `bin/` and `lib/` structure
 - **Go** → `go.mod` with `module <project-name>`, `main.go` entry point
 
 ### step 3 — AGENTS.md
-Create `AGENTS.md` using the code project template from `data/reference.md`.
+Create `AGENTS.md` using the code project template from `~/.dotfiles/workflows/code/project-setup/data/reference.md`.
 Fill in:
 - `name:` project name
 - `purpose:` one-sentence description from phase 1
@@ -74,17 +74,17 @@ Create `CLAUDE.md` with a single line:
 ```
 
 ### step 5 — README.md
-Create `README.md` using the template from `data/reference.md`.
+Create `README.md` using the template from `~/.dotfiles/workflows/code/project-setup/data/reference.md`.
 Fill in project name and purpose. Leave usage/setup sections as stubs for the user to complete.
 
 ### step 6 — test stub
-Create a minimal test file using the appropriate stub from `data/reference.md`:
+Create a minimal test file using the appropriate stub from `~/.dotfiles/workflows/code/project-setup/data/reference.md`:
 - **Python** → `tests/test_main.py` with one placeholder test using pytest
 - **Bash** → `tests/test_main.sh` with one placeholder assertion
 - **Go** → `<package>_test.go` with one placeholder test using `testing`
 
 ### step 7 — git init
-Run `tools/init-git.sh <project-root>` to:
+Run `~/.dotfiles/workflows/code/project-setup/tools/init-git.sh <project-root> <language>` to:
 1. `git init`
 2. Create `.gitignore` appropriate for the language
 3. `git add .`

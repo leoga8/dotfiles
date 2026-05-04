@@ -29,8 +29,7 @@ mkdir -p \
   "$VAULT/raw/_important" \
   "$VAULT/src/img" \
   "$VAULT/src/pdf" \
-  "$VAULT/src/excalidraw" \
-  "$VAULT/workflows"
+  "$VAULT/src/excalidraw"
 
 echo "scaffolded: $VAULT"
 echo ""
