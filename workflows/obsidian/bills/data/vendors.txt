@@ -1,4 +1,5 @@
 # Monthly recurring bills
+Action Fuel
 NYSEG
 Verizon Fios
 Verizon Mobile
@@ -8,6 +9,7 @@ Spotify
 FuboTV
 Suburban Propane
 Yorktown Water
+Lawn Service
 
 # Semi-annual (January and September only)
 Yorktown School Taxes
@@ -16,6 +18,7 @@ Yorktown School Taxes
 Anthropic          # January
 Ring               # January
 BJ's Membership    # September
+xPremium	   # December
 
 # Ad-hoc (one-time or irregular — add here after confirmation)
 # Examples: home repairs, car service, contractors, etc.
