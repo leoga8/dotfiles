@@ -11,14 +11,11 @@ Suburban Propane
 Yorktown Water
 Lawn Service
 
-# Semi-annual (January and September only)
-Yorktown School Taxes
-
-# Yearly (month of renewal noted inline)
-Anthropic          # January
-Ring               # January
-BJ's Membership    # September
-xPremium	   # December
-
-# Ad-hoc (one-time or irregular — add here after confirmation)
-# Examples: home repairs, car service, contractors, etc.
+# Ad-hoc (one-time or irregular - month of renewal noted inline)
+# Add here after confirmation: examples home repairs, ca service, contractors, etc
+Anthropic               # January
+Ring                    # January
+BJ's Membership         # September
+xPremium	        # December
+Yorktown Water          # February, July, November
+Yorktown School Taxes   # Januray, September
