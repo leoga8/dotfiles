@@ -4,9 +4,9 @@ Personal dotfiles managed with [GNU Stow](https://www.gnu.org/software/stow/).
 
 ## Configs included
 
-- `tmux` — `~/.config/tmux/tmux.conf`
+- `tmux` — `~/.config/tmux/tmux.conf` *(inactive)*
 - `starship` — `~/.config/starship.toml`
-- `ghostty` — `~/.config/ghostty/config`
+- `ghostty` — `~/.config/ghostty/config` *(inactive)*
 - `nvim` — `~/.config/nvim/`
 - `zsh` — `~/.zshrc`
 - `claude` — `~/.claude/commands/` (global Claude Code slash commands)
@@ -45,11 +45,7 @@ git clone git@github.com:leoga8/dotfiles.git ~/.dotfiles
 Before stowing, remove any existing files that stow would try to overwrite. Use `unlink` for symlinks and `rm` for regular files:
 
 ```bash
-unlink ~/.config/tmux/tmux.conf   # if it's a symlink
-rm ~/.config/tmux/tmux.conf       # if it's a regular file
-
 unlink ~/.config/starship.toml
-unlink ~/.config/ghostty/config
 rm -rf ~/.config/nvim
 unlink ~/.zshrc
 rm ~/.zshrc                       # if it's a regular file
@@ -59,13 +55,12 @@ rm ~/.zshrc                       # if it's a regular file
 
 ```bash
 cd ~/.dotfiles
-stow --no-folding --target=$HOME tmux
 stow --no-folding --target=$HOME starship
-stow --no-folding --target=$HOME ghostty
 stow --no-folding --target=$HOME nvim
 stow --no-folding --target=$HOME zsh
 stow --no-folding --target=$HOME claude
 stow --no-folding --target=$HOME opencode
+# tmux and ghostty are kept in the repo for reference but not stowed
 ```
 
 This creates symlinks from `$HOME` back into `~/.dotfiles/`.
