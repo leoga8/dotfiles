@@ -11,6 +11,7 @@ Personal dotfiles managed with [GNU Stow](https://www.gnu.org/software/stow/).
 - `zsh` — `~/.zshrc`
 - `claude` — `~/.claude/commands/` (global Claude Code slash commands)
 - `opencode` — `~/.config/opencode/` and `~/.opencode/commands/` (OpenCode config + slash commands)
+  - The Warp terminal plugin (`@warp-dot-dev/opencode-warp`) is declared in `opencode.json` and auto-installed by OpenCode via Bun on first launch. Requires Bun to be installed (see `installs.md`).
 
 ---
 

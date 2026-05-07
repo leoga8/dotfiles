@@ -28,4 +28,6 @@
 	- brew install slides
 	- brew install stow
 	- brew install tree-sitter-cli
+	- brew install oven-sh/bun/bun
+	  - Required for OpenCode to auto-install npm plugins (e.g. the Warp plugin declared in `opencode.json`) on first launch. No manual plugin installation needed.
 - Install tpm: git clone https://github.com/tmux-plugins/tpm ~/.config/tmux/plugins/tpm
