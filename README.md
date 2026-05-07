@@ -10,6 +10,7 @@ Personal dotfiles managed with [GNU Stow](https://www.gnu.org/software/stow/).
 - `nvim` — `~/.config/nvim/`
 - `zsh` — `~/.zshrc`
 - `claude` — `~/.claude/commands/` (global Claude Code slash commands)
+- `warp` — `~/.warp/settings.toml` (Warp terminal settings)
 - `opencode` — `~/.config/opencode/` and `~/.opencode/commands/` (OpenCode config + slash commands)
   - The Warp terminal plugin (`@warp-dot-dev/opencode-warp`) is declared in `opencode.json` and auto-installed by OpenCode via Bun on first launch. Requires Bun to be installed (see `installs.md`).
 
@@ -61,6 +62,7 @@ stow --no-folding --target=$HOME nvim
 stow --no-folding --target=$HOME zsh
 stow --no-folding --target=$HOME claude
 stow --no-folding --target=$HOME opencode
+stow --no-folding --target=$HOME warp
 # tmux and ghostty are kept in the repo for reference but not stowed
 ```
 
