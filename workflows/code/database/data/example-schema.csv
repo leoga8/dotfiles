@@ -1,0 +1,4 @@
+table_schema,table_name,column_name,data_type,character_maximum_length,is_nullable,column_default,column_comment
+public,users,id,integer,,NO,nextval('users_id_seq'::regclass),Primary key
+public,users,email,character varying,255,NO,,User email address
+public,users,created_at,timestamp without time zone,,NO,now(),Record creation timestamp

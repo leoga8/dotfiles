@@ -1,0 +1,3 @@
+-- Replace this with a real query written in your preferred style.
+-- Both /query and /optimize will use it as a style reference:
+-- keyword casing, indentation, aliasing, join format, line breaks, etc.

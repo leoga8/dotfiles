@@ -56,12 +56,56 @@ workflows/
 │       │   ├── check-existing-bills.sh
 │       │   └── create-bill-note.sh
 │       └── data/vendors.txt
-└── code/
-    └── project-setup/  — bootstrap a new coding project with AI conventions
-        ├── prompts/project-setup.md    suggested command: /project-setup
-        ├── tools/scaffold-project.sh
-        ├── tools/init-git.sh
-        └── data/reference.md
+├── code/
+│   ├── project-setup/  — bootstrap a new coding project with AI conventions
+│   │   ├── prompts/project-setup.md    suggested command: /project-setup
+│   │   ├── tools/scaffold-project.sh
+│   │   ├── tools/init-git.sh
+│   │   └── data/reference.md
+│   ├── database/       — SQL workflows backed by Snowflake schema exports
+│   │   ├── data/<something>-schema.csv  source of truth — export from Snowflake information_schema
+│   │   ├── data/<something>-erd.md      auto-generated DBML — run /refresh-erd to produce or update
+│   │   └── data/example-query.sql       style reference — fill in with a representative query
+│   │   ├── query/
+│   │   │   └── prompts/query.md         suggested command: /query
+│   │   ├── optimize/
+│   │   │   └── prompts/optimize.md      suggested command: /optimize
+│   │   └── refresh-erd/
+│   │       └── prompts/refresh-erd.md   suggested command: /refresh-erd
+│   ├── review-code/    — code review against project conventions
+│   │   └── prompts/review-code.md    suggested command: /review-code
+│   ├── test/           — generate tests for existing code
+│   │   └── prompts/test.md           suggested command: /test
+│   └── refactor/       — safe refactoring without behavior changes
+│       └── prompts/refactor.md       suggested command: /refactor
+├── cellular/
+│   ├── cellular/       — debug AT command and modem logs
+│   │   ├── prompts/cellular.md            suggested command: /cellular
+│   │   └── data/<device-name>.md          saved device config (copy example-device.md)
+│   └── trace/          — analyze PCAP and network traces with tshark
+│       ├── prompts/trace.md               suggested command: /trace
+│       ├── data/<project-name>.md         saved project config (copy example-project.md)
+│       └── data/reference.md              tshark command reference
+├── solutions/
+│   ├── data/
+│   │   ├── config.md              machine-specific paths (gitignored — set on first use)
+│   │   └── context-template.md    template for CONTEXT.md in each inc/ or sr/ folder
+│   ├── new/
+│   │   └── prompts/new.md         suggested command: /new
+│   ├── log/
+│   │   └── prompts/log.md         suggested command: /log
+│   ├── email/
+│   │   └── prompts/email.md       suggested command: /email
+│   ├── slack/
+│   │   └── prompts/slack.md       suggested command: /slack
+│   ├── linear/
+│   │   └── prompts/linear.md      suggested command: /linear
+│   └── notion/
+│       └── prompts/notion.md      suggested command: /notion
+└── mcps/
+    ├── slack.md     — install + configure Slack MCP for Claude Code and OpenCode
+    ├── linear.md    — install + configure Linear MCP for Claude Code and OpenCode
+    └── notion.md    — install + configure Notion MCP for Claude Code and OpenCode
 ```
 
 ---
@@ -83,14 +127,28 @@ Neither `.claude/` nor `.opencode/` directories are committed here — they live
 
 ### current slash commands
 
-| command          | prompt file                                          | description                               |
-|------------------|------------------------------------------------------|-------------------------------------------|
-| /hello           | obsidian/daily-open/prompts/hello.md                 | session opener: inbox, daily note, agenda |
-| /wrap-up         | obsidian/vault-update/prompts/update.md              | session closer: inbox, notes, drift check |
-| /inbox           | obsidian/inbox-process/prompts/inbox.md              | classify and file notes from add/         |
-| /bills           | obsidian/bills/prompts/bills.md                      | monthly bill note creation                |
-| /vault-setup     | obsidian/vault-setup/prompts/vault-setup.md          | bootstrap or migrate a vault              |
-| /project-setup   | code/project-setup/prompts/project-setup.md          | bootstrap a new coding project            |
+| command          | prompt file                                                    | description                               |
+|------------------|----------------------------------------------------------------|-------------------------------------------|
+| /hello           | obsidian/daily-open/prompts/hello.md                           | session opener: inbox, daily note, agenda |
+| /wrap-up         | obsidian/vault-update/prompts/update.md                        | session closer: inbox, notes, drift check |
+| /inbox           | obsidian/inbox-process/prompts/inbox.md                        | classify and file notes from add/         |
+| /bills           | obsidian/bills/prompts/bills.md                                | monthly bill note creation                |
+| /vault-setup     | obsidian/vault-setup/prompts/vault-setup.md                    | bootstrap or migrate a vault              |
+| /project-setup   | code/project-setup/prompts/project-setup.md                    | bootstrap a new coding project            |
+| /query           | code/database/query/prompts/query.md                           | build SQL queries from natural language   |
+| /optimize        | code/database/optimize/prompts/optimize.md                     | analyze and optimize an existing query    |
+| /refresh-erd     | code/database/refresh-erd/prompts/refresh-erd.md               | regenerate DBML ERDs from schema CSVs     |
+| /review-code     | code/review-code/prompts/review-code.md                        | review code against project conventions   |
+| /test            | code/test/prompts/test.md                                      | generate tests for existing code          |
+| /refactor        | code/refactor/prompts/refactor.md                              | safe refactoring without behavior changes |
+| /cellular        | cellular/cellular/prompts/cellular.md                          | debug AT command and modem logs           |
+| /trace           | cellular/trace/prompts/trace.md                                | analyze PCAP and network traces           |
+| /new             | solutions/new/prompts/new.md                                   | scaffold a new INC or SR folder           |
+| /log             | solutions/log/prompts/log.md                                   | append update to Obsidian note            |
+| /email           | solutions/email/prompts/email.md                               | draft update, escalation, or resolution   |
+| /slack           | solutions/slack/prompts/slack.md                               | draft or post Slack thread message        |
+| /linear          | solutions/linear/prompts/linear.md                             | create or update a Linear issue           |
+| /notion          | solutions/notion/prompts/notion.md                             | post or update a Notion page              |
 
 > This table is kept in sync automatically by /wrap-up. When adding a new workflow, add its suggested command here and run /wrap-up to confirm.
 
@@ -117,6 +175,12 @@ echo "@$HOME/workflows/obsidian/inbox-process/prompts/inbox.md"     > ~/.claude/
 echo "@$HOME/workflows/obsidian/bills/prompts/bills.md"             > ~/.claude/commands/bills.md
 echo "@$HOME/workflows/obsidian/vault-setup/prompts/vault-setup.md" > ~/.claude/commands/vault-setup.md
 echo "@$HOME/workflows/code/project-setup/prompts/project-setup.md" > ~/.claude/commands/project-setup.md
+echo "@$HOME/workflows/solutions/new/prompts/new.md"                > ~/.claude/commands/new.md
+echo "@$HOME/workflows/solutions/log/prompts/log.md"                > ~/.claude/commands/log.md
+echo "@$HOME/workflows/solutions/email/prompts/email.md"            > ~/.claude/commands/email.md
+echo "@$HOME/workflows/solutions/slack/prompts/slack.md"            > ~/.claude/commands/slack.md
+echo "@$HOME/workflows/solutions/linear/prompts/linear.md"          > ~/.claude/commands/linear.md
+echo "@$HOME/workflows/solutions/notion/prompts/notion.md"          > ~/.claude/commands/notion.md
 ```
 
 After this, `~/workflows/` sits permanently on the machine — it is never copied into individual projects. It is the recipe; projects are the output.
@@ -132,6 +196,10 @@ After this, `~/workflows/` sits permanently on the machine — it is never copie
 ```
 
 The workflow prompts handle this automatically — they resolve the vault path at runtime and pass it to the tools.
+
+**Solutions workflows and machine-specific paths** — `solutions/data/config.md` stores the `solutions_root` and `vault_path` for each machine. This file is gitignored. On first use of any solutions command (`/new`, `/log`, etc.) the AI will prompt for these values and save them automatically.
+
+**MCP connectors** — to enable `/slack`, `/linear`, and `/notion` to post directly (rather than draft-only mode), set up the relevant MCP on each machine. See `workflows/mcps/` for step-by-step instructions for each connector.
 
 ---
 
