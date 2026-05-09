@@ -4,15 +4,25 @@ Connects Linear to Claude Code and OpenCode so `/linear` can create issues and p
 
 ---
 
-## 1. get a Linear API key
+## 1. get an API key
 
 1. Go to https://linear.app → Settings → API → Personal API keys
 2. Create a new key with a descriptive label (e.g. `claude-code`)
 3. Copy the key — it won't be shown again
 
+## 2. export the key in your shell profile
+
+Add to `~/.zshrc` (or `~/.bashrc`) — **never put raw tokens in committed config files**:
+
+```bash
+export LINEAR_API_KEY="lin_api_your_key_here"
+```
+
+Then reload: `source ~/.zshrc`
+
 ---
 
-## 2. configure Claude Code
+## 3. configure Claude Code
 
 Add to `~/.claude/settings.json` (create the file if it doesn't exist):
 
@@ -23,7 +33,7 @@ Add to `~/.claude/settings.json` (create the file if it doesn't exist):
       "command": "npx",
       "args": ["-y", "@modelcontextprotocol/server-linear"],
       "env": {
-        "LINEAR_API_KEY": "lin_api_your_key_here"
+        "LINEAR_API_KEY": "${LINEAR_API_KEY}"
       }
     }
   }
@@ -34,7 +44,7 @@ If `mcpServers` already exists, add the `"linear"` block inside it.
 
 ---
 
-## 3. configure OpenCode
+## 4. configure OpenCode
 
 Add to `~/.config/opencode/opencode.json` inside the `"mcp"` block:
 
@@ -45,7 +55,7 @@ Add to `~/.config/opencode/opencode.json` inside the `"mcp"` block:
       "type": "local",
       "command": ["npx", "-y", "@modelcontextprotocol/server-linear"],
       "environment": {
-        "LINEAR_API_KEY": "lin_api_your_key_here"
+        "LINEAR_API_KEY": "${LINEAR_API_KEY}"
       }
     }
   }
@@ -54,7 +64,7 @@ Add to `~/.config/opencode/opencode.json` inside the `"mcp"` block:
 
 ---
 
-## 4. test the connection
+## 5. test the connection
 
 In a Claude Code session:
 ```
@@ -69,6 +79,6 @@ List my assigned Linear issues.
 
 ## notes
 
-- API keys are personal — each machine / person needs their own
-- Keep keys out of dotfiles — use environment variables or a secrets manager if sharing this repo
+- API keys are personal — each machine needs its own key exported in the shell profile
+- On machines without the env var set, the MCP silently fails to connect — everything else keeps working
 - The MCP supports: creating issues, adding comments, updating status, listing teams and projects

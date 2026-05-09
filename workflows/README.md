@@ -201,6 +201,18 @@ The workflow prompts handle this automatically — they resolve the vault path a
 
 **MCP connectors** — to enable `/slack`, `/linear`, and `/notion` to post directly (rather than draft-only mode), set up the relevant MCP on each machine. See `workflows/mcps/` for step-by-step instructions for each connector.
 
+**MCP tokens and dotfiles safety** — never hardcode API tokens directly in `opencode.json` or `~/.claude/settings.json`. Both tools inherit the shell environment, so export tokens in your shell profile instead and reference them as `${VAR_NAME}` in config files. This way the config is safe to commit and tokens stay machine-local:
+
+```bash
+# in ~/.zshrc (or ~/.bashrc) — never in a committed config file
+export SLACK_BOT_TOKEN="xoxb-..."
+export SLACK_TEAM_ID="T0123ABCDEF"
+export LINEAR_API_KEY="lin_api_..."
+export NOTION_API_KEY="secret_..."
+```
+
+Config files then reference them as `"${SLACK_BOT_TOKEN}"` — if the var isn't set on a machine, the MCP silently fails to connect but everything else keeps working.
+
 ---
 
 ## per-project setup
