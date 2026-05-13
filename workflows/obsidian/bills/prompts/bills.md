@@ -1,6 +1,6 @@
 # bills
 
-> Monthly bill note creation routine. Run on the 1st of each month, or when prompted by /hello.
+> Monthly bill note creation routine. Personal vault only. Run on the 1st of each month, or when prompted by /hello.
 
 **Suggested command:** `/bills`
 

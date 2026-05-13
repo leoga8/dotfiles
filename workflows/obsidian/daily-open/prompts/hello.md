@@ -54,5 +54,8 @@
 
 ### 6. monthly bills reminder
 - Check if today is the 1st of the month
-- If yes: remind that the bills workflow should be run (`/bills`) and ask if you want to run it now
 - If no: skip
+- If yes:
+  - Ask: is this the personal vault or the work vault?
+  - If work: skip (bills only go in the personal vault)
+  - If personal: remind that the bills workflow should be run (`/bills`) and ask if you want to run it now
