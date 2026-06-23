@@ -42,10 +42,10 @@ Ask:
 3. **Affected clients** — client name(s), or "internal"
 4. **Partner** — team or vendor involved, or "n/a"
 
-### 2. generate ID
+### 2. generate folder name
 
-- Count existing folders in `<solutions_root>/inc/` or `<solutions_root>/sr/` to determine the next number
-- Format: `INC-YYYY-###` or `SR-YYYY-###` (zero-padded to 3 digits, e.g. `INC-2026-001`)
+- Ask: **Ticket number** — paste the ticket number exactly as it appears in your ticketing system
+- Folder name: `YYYYMM-<ticket-number>` using today's year and month (e.g. `202605-INC123`)
 
 ### 3. scaffold folder
 

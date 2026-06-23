@@ -27,7 +27,7 @@
 
 ### 1. identify the active item
 
-- Ask: "Which incident or service request is this Notion update for? (e.g. INC-2026-001)"
+- Ask: "Which incident or service request is this Notion update for? (e.g. 202605-INC123)"
 - Read `<solutions_root>/<type>/<ID>/CONTEXT.md` to load context
 
 ### 2. gather update intent
@@ -40,7 +40,7 @@ Ask:
 ### 3. draft
 
 **New page:**
-- **Title** — `INC-2026-001 — <summary>`
+- **Title** — `202605-INC123 — <summary>`
 - **Properties** (if database) — Date, Status, Affected Clients, Partner, Type
 - **Body** — structured: Summary, Impact, Timeline, Resolution / Next Steps
 

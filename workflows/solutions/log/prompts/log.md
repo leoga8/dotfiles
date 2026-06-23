@@ -27,7 +27,7 @@
 ### 1. identify the active item
 
 - If a CONTEXT.md path was passed or is obvious from context, use it
-- Otherwise ask: "Which incident or service request is this update for? (e.g. INC-2026-001)"
+- Otherwise ask: "Which incident or service request is this update for? (e.g. 202605-INC123)"
 - Read `<solutions_root>/<type>/<ID>/CONTEXT.md` to get `obsidian_note_path`
 - If `obsidian_note_path` is blank: ask the user to paste the full path, then write it to CONTEXT.md
 

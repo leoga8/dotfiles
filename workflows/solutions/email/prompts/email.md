@@ -26,7 +26,7 @@
 
 ### 1. identify the active item
 
-- Ask: "Which incident or service request is this email for? (e.g. INC-2026-001)"
+- Ask: "Which incident or service request is this email for? (e.g. 202605-INC123)"
 - Read `<solutions_root>/<type>/<ID>/CONTEXT.md` to load: summary, affected_clients, partner, date
 
 ### 2. gather email intent
@@ -40,7 +40,7 @@ Ask:
 ### 3. draft
 
 Write the email with:
-- **Subject line** — clear, includes the ID (e.g. `[INC-2026-001] Service Disruption Update`)
+- **Subject line** — clear, includes the ID (e.g. `[202605-INC123] Service Disruption Update`)
 - **Opening** — brief context sentence (no fluff)
 - **Body** — factual, structured, no jargon. For updates: what happened, current status, next step. For escalations: impact, urgency, what's needed. For resolutions: what happened, what was fixed, any follow-up.
 - **Closing** — appropriate sign-off

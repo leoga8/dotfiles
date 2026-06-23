@@ -28,7 +28,7 @@
 
 ### 1. identify the active item
 
-- Ask: "Which incident or service request is this message for? (e.g. INC-2026-001)"
+- Ask: "Which incident or service request is this message for? (e.g. 202605-INC123)"
 - Read `<solutions_root>/<type>/<ID>/CONTEXT.md` to load context
 
 ### 2. gather message intent
