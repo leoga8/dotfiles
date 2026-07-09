@@ -11,6 +11,13 @@ export PATH="/opt/homebrew/bin:$PATH"
 if [[ -f ~/.secrets ]]; then
 	source ~/.secrets
 fi
+
+# Since cd ** and FZF_ALT_C_COMMAND do not work in Warp
+fcd () {
+	local dir
+	dir=$(fd --type d --hidden --follow --exclude .git . "${1:-.}" 2>/dev/null | fzf --height 40% --reverse --preview 'ls -la --color=always {}' +m)
+	[[ -n "$dir" ]] && cd -- "$dir"
+}
 ######################
 
 # Set name of the theme to load --- if set to "random", it will
