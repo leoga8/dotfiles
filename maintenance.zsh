@@ -23,6 +23,8 @@ if [[ $(uname) == "Darwin" ]]; then
 		# Upgrade casks that ignore brew upgrade --cask (auto-update flag)
 		"yes | brew upgrade --cask obsidian"
 		"yes | brew upgrade --cask ghostty"
+		"yes | brew upgrade --cask spotify"
+		"yes | brew upgrade --cask brave-browser"
 		# Cleanup space
 		"brew cleanup --prune=all"
 		# Diagnose any issues
