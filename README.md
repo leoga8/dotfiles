@@ -26,10 +26,10 @@ Workflows and pipelines live **outside this repo** at `~/Documents/code/` — iC
 │   ├── database/       # optimize, query, refresh-erd
 │   ├── connectivity/   # connectivity, trace
 │   ├── cases/          # new, log, comms, data/
-│   ├── mcps/           # linear, notion, slack context docs
 │   └── meta/           # scaffold (new workflow/pipeline generator)
-└── pipelines/
-    └── code/           # implement, develop
+├── pipelines/
+│   └── code/           # implement, develop
+└── mcps/               # linear, notion, slack context docs
 ```
 
 The `claude` and `opencode` stow packages contain shims — tiny `.md` files that reference these paths. Shims are the only workflow-related thing tracked in git, so the repo stays conflict-free across machines. Each machine has its own `~/Documents/code/` with only the workflows relevant to it.
@@ -169,4 +169,10 @@ git pull
 
 ## Software installs
 
-See [installs.md](./installs.md) for all the commands to install software and tools on a new machine.
+Run `bootstrap.sh` on a fresh machine to install all CLI tools and apps:
+
+```bash
+zsh ~/.dotfiles/bootstrap.sh
+```
+
+See [bootstrap.sh](./bootstrap.sh) for the full list.
