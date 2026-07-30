@@ -1,1 +1,1 @@
-@~/.dotfiles/workflows/code/refactor/prompts/refactor.md
+@~/Documents/code/workflows/code/refactor/prompts/refactor.md

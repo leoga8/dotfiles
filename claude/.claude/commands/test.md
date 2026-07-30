@@ -1,1 +1,1 @@
-@~/.dotfiles/workflows/code/test/prompts/test.md
+@~/Documents/code/workflows/code/test/prompts/test.md

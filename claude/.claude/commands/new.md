@@ -1,1 +1,1 @@
-@~/.dotfiles/workflows/solutions/new/prompts/new.md
+@~/Documents/code/workflows/cases/new/prompts/new.md

@@ -1,1 +1,1 @@
-@~/.dotfiles/workflows/code/database/optimize/prompts/optimize.md
+@~/Documents/code/workflows/database/optimize/prompts/optimize.md

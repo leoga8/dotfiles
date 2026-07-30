@@ -1,1 +1,1 @@
-@~/.dotfiles/workflows/obsidian/vault-setup/prompts/vault-setup.md
+@~/Documents/code/workflows/obsidian/vault-setup/prompts/vault-setup.md

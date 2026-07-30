@@ -1,1 +1,1 @@
-@~/.dotfiles/workflows/cellular/cellular/prompts/cellular.md
+@~/Documents/code/workflows/connectivity/connectivity/prompts/cellular.md

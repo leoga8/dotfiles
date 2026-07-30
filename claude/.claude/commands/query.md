@@ -1,1 +1,1 @@
-@~/.dotfiles/workflows/code/database/query/prompts/query.md
+@~/Documents/code/workflows/database/query/prompts/query.md

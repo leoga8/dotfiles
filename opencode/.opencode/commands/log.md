@@ -1,1 +1,1 @@
-@~/.dotfiles/workflows/solutions/log/prompts/log.md
+@~/Documents/code/workflows/cases/log/prompts/log.md

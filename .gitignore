@@ -1,6 +1,2 @@
 **/.DS_Store
-node_modules/
-
-# machine-specific workflow configs (set on first use, not committed)
-workflows/solutions/data/config.md
-
+nvim/.config/nvim/lazy-lock.json

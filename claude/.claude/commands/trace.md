@@ -1,1 +1,1 @@
-@~/.dotfiles/workflows/cellular/trace/prompts/trace.md
+@~/Documents/code/workflows/connectivity/trace/prompts/trace.md

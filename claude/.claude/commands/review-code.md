@@ -1,1 +1,1 @@
-@~/.dotfiles/workflows/code/review-code/prompts/review-code.md
+@~/Documents/code/workflows/code/review-code/prompts/review-code.md
