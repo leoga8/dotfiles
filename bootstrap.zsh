@@ -46,7 +46,7 @@ INSTALLS=(
   "brew install lazygit"
   "brew install opencode"
   "brew install starship"
-  "brew install speedtest-cli"
+  # "brew install speedtest-cli"
   "brew install chafa"
   # "brew install slides"
   "brew install stow"
