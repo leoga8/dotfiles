@@ -169,10 +169,14 @@ git pull
 
 ## Software installs
 
-Run `bootstrap.sh` on a fresh machine to install all CLI tools and apps:
+Run `bootstrap.zsh` on a fresh machine to install all CLI tools and apps:
 
 ```bash
-zsh ~/.dotfiles/bootstrap.sh
+zsh ~/.dotfiles/bootstrap.zsh
 ```
 
-See [bootstrap.sh](./bootstrap.sh) for the full list.
+Run `maintenance.zsh` periodically to keep everything up to date:
+
+```bash
+zsh ~/.dotfiles/maintenance.zsh
+```
