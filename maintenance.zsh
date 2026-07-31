@@ -25,6 +25,8 @@ if [[ $(uname) == "Darwin" ]]; then
 		"yes | brew upgrade --cask ghostty"
 		"yes | brew upgrade --cask spotify"
 		"yes | brew upgrade --cask brave-browser"
+		# Upgrade herdr which doesn;t update with just brew upgrade for some reason
+		"yes | brew upgrade herdr"
 		# Cleanup space
 		"brew cleanup --prune=all"
 		# Diagnose any issues
