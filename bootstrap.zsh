@@ -23,7 +23,8 @@ fi
 
 INSTALLS=(
   "brew install --cask rectangle"
-  "brew install --cask ghostty"
+  # "brew install --cask ghostty"
+  "brew install --cask warp"
   "brew install --cask spotify"
   "brew install --cask discord"
   "brew install --cask brave-browser"
@@ -40,7 +41,7 @@ INSTALLS=(
   "brew install jq"
   "brew install fzf"
   "brew install fd"
-  "brew install herdr"
+  # "brew install herdr"
   "brew install nvim"
   "brew install fastfetch"
   "brew install lazygit"

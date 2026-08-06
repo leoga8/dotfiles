@@ -5,12 +5,17 @@ Personal dotfiles managed with [GNU Stow](https://www.gnu.org/software/stow/).
 ## Configs included
 
 - `starship` — `~/.config/starship.toml`
-- `ghostty` — `~/.config/ghostty/config`
 - `nvim` — `~/.config/nvim/`
 - `zsh` — `~/.zshrc`
-- `herdr` — `~/.config/herdr/config.toml`
 - `claude` — `~/.claude/commands/` (global Claude Code slash commands)
 - `opencode` — `~/.config/opencode/` and `~/.opencode/commands/` (OpenCode config + slash commands)
+
+### Stale configs
+
+These packages are kept in the repo but are **no longer stowed** on any machine:
+
+- `ghostty` — `~/.config/ghostty/config` (not in active use)
+- `herdr` — `~/.config/herdr/config.toml` (not in active use)
 
 ---
 
@@ -108,8 +113,8 @@ stow --no-folding --target=$HOME nvim
 stow --no-folding --target=$HOME zsh
 stow --no-folding --target=$HOME claude
 stow --no-folding --target=$HOME opencode
-stow --no-folding --target=$HOME ghostty
-stow --no-folding --target=$HOME herdr
+# stow --no-folding --target=$HOME ghostty   # stale — not in active use
+# stow --no-folding --target=$HOME herdr     # stale — not in active use
 ```
 
 This creates symlinks from `$HOME` back into `~/.dotfiles/`.
