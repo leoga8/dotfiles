@@ -30,47 +30,148 @@ Workflows and pipelines live **outside this repo** at `~/Documents/code/` — iC
 │   ├── code/           # project-setup, spec, write, refactor, review-code, test
 │   ├── database/       # optimize, query, refresh-erd
 │   ├── connectivity/   # connectivity, trace
-│   ├── cases/          # new, log, comms, data/
-│   └── meta/           # scaffold (new workflow/pipeline generator)
+│   ├── cases/          # new, comms, data/
+│   └── meta/           # new-workflow, new-pipeline
 ├── pipelines/
-│   └── code/           # implement, develop
+│   ├── obsidian/       # /obsidian pipeline
+│   ├── code/           # /code pipeline (+ implement, develop sub-pipelines)
+│   ├── database/       # /database pipeline
+│   ├── connectivity/   # /connectivity pipeline
+│   ├── cases/          # /cases pipeline
+│   └── meta/           # /scaffold pipeline
 └── mcps/               # linear, notion, slack context docs
 ```
 
 The `claude` and `opencode` stow packages contain shims — tiny `.md` files that reference these paths. Shims are the only workflow-related thing tracked in git, so the repo stays conflict-free across machines. Each machine has its own `~/Documents/code/` with only the workflows relevant to it.
 
-### Shim → workflow mapping
+### Shim → pipeline mapping
 
-| Shim | Workflow |
-|------|----------|
-| `/hello` | `obsidian/daily-open` |
-| `/bills` | `obsidian/bills` |
-| `/inbox` | `obsidian/inbox-process` |
-| `/vault-setup` | `obsidian/vault-setup` |
-| `/wrap-up` | `obsidian/vault-update` |
-| `/spec` | `code/spec` |
-| `/write` | `code/write` |
-| `/refactor` | `code/refactor` |
-| `/review-code` | `code/review-code` |
-| `/test` | `code/test` |
-| `/project-setup` | `code/project-setup` |
-| `/optimize` | `database/optimize` |
-| `/query` | `database/query` |
-| `/refresh-erd` | `database/refresh-erd` |
-| `/cellular` | `connectivity/connectivity` |
-| `/trace` | `connectivity/trace` |
-| `/new` | `cases/new` |
-| `/log` | `cases/log` |
-| `/comms` | `cases/comms` |
-| `/scaffold` | `meta/scaffold` |
-| `/implement` | `pipelines/code/implement` |
-| `/develop` | `pipelines/code/develop` |
+| Shim | Pipeline | Options |
+|------|----------|---------|
+| `/obsidian` | `pipelines/obsidian` | daily-open, wrap-up, inbox, bills, vault-setup |
+| `/code` | `pipelines/code/code` | spec, write, review, refactor, test, project-setup, implement, develop |
+| `/database` | `pipelines/database` | query, optimize, refresh-erd |
+| `/connectivity` | `pipelines/connectivity` | cellular, trace |
+| `/cases` | `pipelines/cases` | new, comms |
+| `/scaffold` | `pipelines/meta/scaffold` | new-workflow, new-pipeline |
 
 ### Personal vs work laptop
 
-On a **work laptop**: clone this repo and stow as usual. Then create `~/Documents/code/` with only the workflows relevant to that machine (skip `obsidian/`, include `cases/` and `connectivity/` if needed). The shims work regardless — a missing workflow file just means that command isn't used there.
+The **6 shared shims** above live in this repo and work on both personal and work machines — they all point to `~/Documents/code/` which exists independently on each machine.
 
-> On a new machine: create `~/Documents/code/workflows/` and `~/Documents/code/pipelines/`, then populate with the workflows you need.
+The **work laptop** has 3 additional work-specific pipelines (`/csp`, `/onboard`, `/rate-card`) whose shims are **not** in this repo. They live in `~/Documents/code/dotfiles/` on the work machine and are stowed from there as a second stow pass (see work machine setup below).
+
+---
+
+## Work machine setup
+
+> Use this section to set up a new work laptop or recover after reinstalling. Point any Claude instance at this section and it can do everything here.
+
+### what goes where
+
+| location | what it contains | managed by |
+|----------|-----------------|------------|
+| `~/.dotfiles/` | starship, nvim, zsh, 6 shared shims | git (this repo, pull-only on work) |
+| `~/Documents/code/` | workflows, pipelines, mcps, vault, 3 work-specific shims | iCloud (work machine's own Apple ID) |
+| `~/Documents/code/obsidian/leo-work-os/` | work Obsidian vault | iCloud (work machine's own Apple ID) |
+
+### step 1 — clone dotfiles and stow shared config
+
+```bash
+git clone git@github.com:leoga8/dotfiles.git ~/.dotfiles
+cd ~/.dotfiles
+stow --no-folding --target=$HOME starship
+stow --no-folding --target=$HOME nvim
+stow --no-folding --target=$HOME zsh
+stow --no-folding --target=$HOME claude
+stow --no-folding --target=$HOME opencode
+```
+
+This gives you all 6 shared pipeline shims in `~/.claude/commands/` and `~/.opencode/commands/`.
+
+### step 2 — transfer ~/Documents/code/
+
+Transfer the staged `~/Documents/code/` content (workflows, pipelines, mcps, dotfiles, obsidian vault) to the work machine. The expected top-level structure:
+
+```
+~/Documents/code/
+├── obsidian/
+│   └── leo-work-os/     # work Obsidian vault
+├── workflows/
+│   ├── obsidian/        # daily-open, inbox-process, vault-setup, vault-update
+│   ├── code/            # project-setup, spec, write, refactor, review-code, test
+│   ├── database/        # optimize, query, refresh-erd (+ real ERD/schema data files)
+│   ├── connectivity/    # cellular, trace
+│   ├── cases/           # new, comms, csp-docs, customer-onboarding, rate-cards, data/
+│   └── meta/            # new-workflow, new-pipeline
+├── pipelines/
+│   ├── obsidian/        # /obsidian pipeline (no bills)
+│   ├── code/            # /code, /implement, /develop pipelines
+│   ├── database/        # /database pipeline
+│   ├── connectivity/    # /connectivity pipeline
+│   ├── cases/           # /cases pipeline
+│   ├── meta/            # /scaffold pipeline
+│   ├── csp/             # /csp pipeline
+│   ├── onboard/         # /onboard pipeline
+│   └── rate-card/       # /rate-card pipeline
+├── mcps/                # linear, slack, notion MCP setup docs
+└── dotfiles/            # work-specific shims (stowed in step 3)
+    ├── claude/.claude/commands/
+    │   ├── csp.md
+    │   ├── onboard.md
+    │   └── rate-card.md
+    └── opencode/.opencode/commands/
+        ├── csp.md
+        ├── onboard.md
+        └── rate-card.md
+```
+
+### step 3 — stow work-specific shims
+
+```bash
+cd ~/Documents/code
+stow --no-folding --target=$HOME dotfiles
+```
+
+This adds `/csp`, `/onboard`, `/rate-card` to `~/.claude/commands/` and `~/.opencode/commands/` alongside the 6 from step 1. No conflicts — different filenames.
+
+### full shim list on work machine
+
+| shim | pipeline | source |
+|------|----------|--------|
+| `/obsidian` | `pipelines/obsidian` | `~/.dotfiles` (shared) |
+| `/code` | `pipelines/code/code` | `~/.dotfiles` (shared) |
+| `/database` | `pipelines/database` | `~/.dotfiles` (shared) |
+| `/connectivity` | `pipelines/connectivity` | `~/.dotfiles` (shared) |
+| `/cases` | `pipelines/cases` | `~/.dotfiles` (shared) |
+| `/scaffold` | `pipelines/meta/scaffold` | `~/.dotfiles` (shared) |
+| `/csp` | `pipelines/csp` | `~/Documents/code/dotfiles` (work-only) |
+| `/onboard` | `pipelines/onboard` | `~/Documents/code/dotfiles` (work-only) |
+| `/rate-card` | `pipelines/rate-card` | `~/Documents/code/dotfiles` (work-only) |
+
+### step 4 — vault config
+
+Update `~/Documents/code/workflows/cases/data/config.md` to confirm the vault path:
+
+```
+vault_path: ~/Documents/code/obsidian/leo-work-os
+```
+
+### step 5 — MCP setup
+
+Each MCP needs its API key exported in `~/.zshrc` and configured in `~/.claude/settings.json` and `~/.config/opencode/opencode.json`. Setup instructions are in `~/Documents/code/mcps/`:
+
+- `mcps/linear.md` → Linear API key
+- `mcps/slack.md` → Slack bot token + team ID
+- `mcps/notion.md` → Notion integration token
+
+### new job / new work laptop
+
+If starting fresh with a new employer:
+1. Follow steps 1–3 above
+2. For the vault: run `/obsidian` → vault-setup → work (greenfield) — it scaffolds the full work vault structure from `~/Documents/code/workflows/obsidian/vault-setup/`
+3. For work-specific workflows (`/csp`, `/onboard`, `/rate-card`): the pipeline stubs are in place but their workflows reference employer-specific data files. You'll need to rebuild the `data/` folders in `workflows/cases/csp-docs/`, `workflows/cases/customer-onboarding/`, and `workflows/cases/rate-cards/` with the new employer's context
+4. Update `~/Documents/code/workflows/cases/data/config.md` with the new vault path
 
 ---
 

@@ -1,1 +1,1 @@
-@~/Documents/code/workflows/meta/scaffold/prompts/scaffold.md
+@~/Documents/code/pipelines/meta/scaffold/prompts/scaffold.md
