@@ -102,7 +102,8 @@ Transfer the staged `~/Documents/code/` content (workflows, pipelines, mcps, dot
 │   ├── code/            # project-setup, spec, write, refactor, review-code, test
 │   ├── database/        # optimize, query, refresh-erd (+ real ERD/schema data files)
 │   ├── connectivity/    # cellular, trace
-│   ├── cases/           # new, comms, csp-docs, customer-onboarding, rate-cards, data/
+│   ├── cases/           # new, comms, data/
+│   ├── solutions/       # csp-docs, customer-onboarding, rate-cards
 │   └── meta/            # new-workflow, new-pipeline
 ├── pipelines/
 │   ├── obsidian/        # /obsidian pipeline (no bills)
@@ -170,7 +171,7 @@ Each MCP needs its API key exported in `~/.zshrc` and configured in `~/.claude/s
 If starting fresh with a new employer:
 1. Follow steps 1–3 above
 2. For the vault: run `/obsidian` → vault-setup → work (greenfield) — it scaffolds the full work vault structure from `~/Documents/code/workflows/obsidian/vault-setup/`
-3. For work-specific workflows (`/csp`, `/onboard`, `/rate-card`): the pipeline stubs are in place but their workflows reference employer-specific data files. You'll need to rebuild the `data/` folders in `workflows/cases/csp-docs/`, `workflows/cases/customer-onboarding/`, and `workflows/cases/rate-cards/` with the new employer's context
+3. For work-specific workflows (`/csp`, `/onboard`, `/rate-card`): the pipeline stubs are in place but their workflows reference employer-specific data files. You'll need to rebuild the `data/` folders in `workflows/solutions/csp-docs/`, `workflows/solutions/customer-onboarding/`, and `workflows/solutions/rate-cards/` with the new employer's context
 4. Update `~/Documents/code/workflows/cases/data/config.md` with the new vault path
 
 ---
