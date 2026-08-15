@@ -26,6 +26,7 @@ if [[ $(uname) == "Darwin" ]]; then
 		"yes | brew upgrade --cask warp"
 		"yes | brew upgrade --cask spotify"
 		"yes | brew upgrade --cask brave-browser"
+		"yes | brew upgrade --cask dbeaver-community"
 		# Upgrade herdr which doesn;t update with just brew upgrade for some reason
 		# "yes | brew upgrade herdr"
 		# Cleanup space
