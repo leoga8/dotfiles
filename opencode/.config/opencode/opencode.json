@@ -1,6 +1,6 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "model": "opencode/claude-sonnet-4-6",
+  "model": "opencode/claude-sonnet-5",
   "autoupdate": true,
   "mcp": {},
   "plugin": ["@warp-dot-dev/opencode-warp"]
