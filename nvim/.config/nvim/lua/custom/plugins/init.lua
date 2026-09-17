@@ -90,6 +90,18 @@ return {
     end,
   },
 
+  -- vim-sneak
+  {
+    'justinmk/vim-sneak',
+    init = function()
+      vim.g['sneak#label'] = 1 -- label-mode (EasyMotion-style jump labels)
+    end,
+    config = function()
+      vim.keymap.set({ 'n', 'x', 'o' }, 'gs', '<Plug>Sneak_s', { desc = 'Sneak forward' })
+      vim.keymap.set({ 'n', 'x', 'o' }, 'gS', '<Plug>Sneak_S', { desc = 'Sneak backward' })
+    end,
+  },
+
   -- snacks dashboard override
   {
     'folke/snacks.nvim',
