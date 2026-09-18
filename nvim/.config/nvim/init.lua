@@ -860,6 +860,11 @@ require('lazy').setup({
       -- set use_icons to true if you have a Nerd Font
       statusline.setup { use_icons = vim.g.have_nerd_font }
 
+      vim.api.nvim_set_hl(0, 'MiniStatuslineModeNormal', { bg = '#82aaff', fg = '#212121', bold = true })
+      vim.api.nvim_set_hl(0, 'MiniStatuslineModeInsert', { bg = '#ffcb6b', fg = '#212121', bold = true })
+      vim.api.nvim_set_hl(0, 'MiniStatuslineModeVisual', { bg = '#c792ea', fg = '#212121', bold = true })
+      vim.api.nvim_set_hl(0, 'MiniStatuslineModeReplace', { bg = '#f07178', fg = '#212121', bold = true })
+
       -- You can configure sections in the statusline by overriding their
       -- default behavior. For example, here we set the section for
       -- cursor location to LINE:COLUMN

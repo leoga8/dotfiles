@@ -35,19 +35,6 @@ return {
     end,
   },
 
-  -- status line colors
-  {
-    'echasnovski/mini.nvim',
-    config = function()
-      local statusline = require 'mini.statusline'
-      statusline.setup()
-
-      vim.api.nvim_set_hl(0, 'MiniStatuslineModeNormal', { bg = '#82aaff', fg = '#212121', bold = true })
-      vim.api.nvim_set_hl(0, 'MiniStatuslineModeInsert', { bg = '#ffcb6b', fg = '#212121', bold = true })
-      vim.api.nvim_set_hl(0, 'MiniStatuslineModeVisual', { bg = '#c792ea', fg = '#212121', bold = true })
-      vim.api.nvim_set_hl(0, 'MiniStatuslineModeReplace', { bg = '#f07178', fg = '#212121', bold = true })
-    end,
-  },
   -- opencode
   {
     'nickjvandyke/opencode.nvim',
