@@ -160,11 +160,29 @@ vault_path: ~/Documents/code/obsidian/leo-work-os
 
 ### step 5 — MCP setup
 
-Each MCP needs its API key exported in `~/.zshrc` and configured in `~/.claude/settings.json` and `~/.config/opencode/opencode.json`. Setup instructions are in `~/Documents/code/mcps/`:
+`~/.config/opencode/opencode.json` (stowed from this repo) already has MCP entries for Linear, Slack, and Notion configured with env var placeholders — it silently skips any MCP whose env var is not set, so the file is safe on personal machines too.
 
-- `mcps/linear.md` → Linear API key
-- `mcps/slack.md` → Slack bot token + team ID
-- `mcps/notion.md` → Notion integration token
+Add the following to `~/.zshrc` on the **work laptop only**:
+
+```bash
+# Work MCPs for OpenCode
+export LINEAR_API_KEY="lin_api_your_key_here"
+export SLACK_BOT_TOKEN="xoxb-your-token-here"
+export SLACK_TEAM_ID="T0123ABCDEF"
+export NOTION_API_KEY="secret_your_token_here"
+export HELPSCOUT_API_KEY="Bearer your-personal-access-token-here"
+```
+
+Note: the `Bearer ` prefix is part of the `HELPSCOUT_API_KEY` value.
+
+See `~/Documents/code/mcps/` for step-by-step instructions on obtaining each credential:
+
+- `mcps/linear.md` → Linear personal API key (Settings → API → Personal API keys)
+- `mcps/slack.md` → Slack bot token + workspace team ID
+- `mcps/notion.md` → Notion internal integration token
+- `mcps/helpscout.md` → HelpScout Personal Access Token (Your Profile → API Keys)
+
+Claude Code MCPs are enabled org-wide via Hologram's Claude settings — no manual config needed there.
 
 ### new job / new work laptop
 

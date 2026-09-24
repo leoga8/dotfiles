@@ -2,6 +2,36 @@
   "$schema": "https://opencode.ai/config.json",
   "model": "opencode/claude-sonnet-5",
   "autoupdate": true,
-  "mcp": {},
+  "mcp": {
+    "linear": {
+      "type": "local",
+      "command": ["npx", "-y", "@modelcontextprotocol/server-linear"],
+      "environment": {
+        "LINEAR_API_KEY": "${LINEAR_API_KEY}"
+      }
+    },
+    "slack": {
+      "type": "local",
+      "command": ["npx", "-y", "@modelcontextprotocol/server-slack"],
+      "environment": {
+        "SLACK_BOT_TOKEN": "${SLACK_BOT_TOKEN}",
+        "SLACK_TEAM_ID": "${SLACK_TEAM_ID}"
+      }
+    },
+    "notion": {
+      "type": "local",
+      "command": ["npx", "-y", "@modelcontextprotocol/server-notion"],
+      "environment": {
+        "NOTION_API_KEY": "${NOTION_API_KEY}"
+      }
+    },
+    "helpscout": {
+      "type": "local",
+      "command": ["npx", "-y", "help-scout-mcp-server"],
+      "environment": {
+        "HELPSCOUT_API_KEY": "${HELPSCOUT_API_KEY}"
+      }
+    }
+  },
   "plugin": ["@warp-dot-dev/opencode-warp"]
 }
