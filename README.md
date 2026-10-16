@@ -10,13 +10,6 @@ Personal dotfiles managed with [GNU Stow](https://www.gnu.org/software/stow/).
 - `claude` — `~/.claude/commands/` (global Claude Code slash commands)
 - `opencode` — `~/.config/opencode/` and `~/.opencode/commands/` (OpenCode config + slash commands)
 
-### Stale configs
-
-These packages are kept in the repo but are **no longer stowed** on any machine:
-
-- `ghostty` — `~/.config/ghostty/config` (not in active use)
-- `herdr` — `~/.config/herdr/config.toml` (not in active use)
-
 ---
 
 ## Workflows & Pipelines
@@ -29,14 +22,12 @@ Workflows and pipelines live **outside this repo** at `~/Documents/code/` — iC
 │   ├── obsidian/       # daily-open, bills, inbox-process, vault-setup, vault-update
 │   ├── code/           # project-setup, spec, write, refactor, review-code, test
 │   ├── database/       # optimize, query, refresh-erd
-│   ├── connectivity/   # connectivity, trace
 │   ├── cases/          # new, comms, data/
 │   └── meta/           # new-workflow, new-pipeline
 ├── pipelines/
 │   ├── obsidian/       # /obsidian pipeline
 │   ├── code/           # /code pipeline (+ implement, develop sub-pipelines)
 │   ├── database/       # /database pipeline
-│   ├── connectivity/   # /connectivity pipeline
 │   ├── cases/          # /cases pipeline
 │   └── meta/           # /scaffold pipeline
 └── mcps/               # linear, notion, slack context docs
@@ -51,13 +42,12 @@ The `claude` and `opencode` stow packages contain shims — tiny `.md` files tha
 | `/obsidian` | `pipelines/obsidian` | daily-open, wrap-up, inbox, bills, vault-setup |
 | `/code` | `pipelines/code/code` | spec, write, review, refactor, test, project-setup, implement, develop |
 | `/database` | `pipelines/database` | query, optimize, refresh-erd |
-| `/connectivity` | `pipelines/connectivity` | cellular, trace |
 | `/cases` | `pipelines/cases` | new, comms |
 | `/scaffold` | `pipelines/meta/scaffold` | new-workflow, new-pipeline |
 
 ### Personal vs work laptop
 
-The **6 shared shims** above live in this repo and work on both personal and work machines — they all point to `~/Documents/code/` which exists independently on each machine.
+The **5 shared shims** above live in this repo and work on both personal and work machines — they all point to `~/Documents/code/` which exists independently on each machine.
 
 The **work laptop** has 3 additional work-specific pipelines (`/csp`, `/onboard`, `/rate-card`) whose shims are **not** in this repo. They live in `~/Documents/code/dotfiles/` on the work machine and are stowed from there as a second stow pass (see work machine setup below).
 
@@ -71,7 +61,7 @@ The **work laptop** has 3 additional work-specific pipelines (`/csp`, `/onboard`
 
 | location | what it contains | managed by |
 |----------|-----------------|------------|
-| `~/.dotfiles/` | starship, nvim, zsh, 6 shared shims | git (this repo, pull-only on work) |
+| `~/.dotfiles/` | starship, nvim, zsh, 5 shared shims | git (this repo, pull-only on work) |
 | `~/Documents/code/` | workflows, pipelines, mcps, vault, 3 work-specific shims | iCloud (work machine's own Apple ID) |
 | `~/Documents/code/obsidian/leo-work-os/` | work Obsidian vault | iCloud (work machine's own Apple ID) |
 
@@ -87,7 +77,7 @@ stow --no-folding --target=$HOME claude
 stow --no-folding --target=$HOME opencode
 ```
 
-This gives you all 6 shared pipeline shims in `~/.claude/commands/` and `~/.opencode/commands/`.
+This gives you all 5 shared pipeline shims in `~/.claude/commands/` and `~/.opencode/commands/`.
 
 ### step 2 — transfer ~/Documents/code/
 
@@ -101,7 +91,6 @@ Transfer the staged `~/Documents/code/` content (workflows, pipelines, mcps, dot
 │   ├── obsidian/        # daily-open, inbox-process, vault-setup, vault-update
 │   ├── code/            # project-setup, spec, write, refactor, review-code, test
 │   ├── database/        # optimize, query, refresh-erd (+ real ERD/schema data files)
-│   ├── connectivity/    # cellular, trace
 │   ├── cases/           # new, comms, data/
 │   ├── solutions/       # csp-docs, customer-onboarding, rate-cards
 │   └── meta/            # new-workflow, new-pipeline
@@ -109,7 +98,6 @@ Transfer the staged `~/Documents/code/` content (workflows, pipelines, mcps, dot
 │   ├── obsidian/        # /obsidian pipeline (no bills)
 │   ├── code/            # /code, /implement, /develop pipelines
 │   ├── database/        # /database pipeline
-│   ├── connectivity/    # /connectivity pipeline
 │   ├── cases/           # /cases pipeline
 │   ├── meta/            # /scaffold pipeline
 │   ├── csp/             # /csp pipeline
@@ -134,7 +122,7 @@ cd ~/Documents/code
 stow --no-folding --target=$HOME dotfiles
 ```
 
-This adds `/csp`, `/onboard`, `/rate-card` to `~/.claude/commands/` and `~/.opencode/commands/` alongside the 6 from step 1. No conflicts — different filenames.
+This adds `/csp`, `/onboard`, `/rate-card` to `~/.claude/commands/` and `~/.opencode/commands/` alongside the 5 from step 1. No conflicts — different filenames.
 
 ### full shim list on work machine
 
@@ -143,7 +131,6 @@ This adds `/csp`, `/onboard`, `/rate-card` to `~/.claude/commands/` and `~/.open
 | `/obsidian` | `pipelines/obsidian` | `~/.dotfiles` (shared) |
 | `/code` | `pipelines/code/code` | `~/.dotfiles` (shared) |
 | `/database` | `pipelines/database` | `~/.dotfiles` (shared) |
-| `/connectivity` | `pipelines/connectivity` | `~/.dotfiles` (shared) |
 | `/cases` | `pipelines/cases` | `~/.dotfiles` (shared) |
 | `/scaffold` | `pipelines/meta/scaffold` | `~/.dotfiles` (shared) |
 | `/csp` | `pipelines/csp` | `~/Documents/code/dotfiles` (work-only) |
@@ -219,7 +206,6 @@ Before stowing, remove any existing files that stow would try to overwrite. Use 
 ```bash
 unlink ~/.config/starship.toml
 rm -rf ~/.config/nvim
-rm -rf ~/.config/herdr
 unlink ~/.zshrc
 rm ~/.zshrc                       # if it's a regular file
 ```
@@ -233,8 +219,6 @@ stow --no-folding --target=$HOME nvim
 stow --no-folding --target=$HOME zsh
 stow --no-folding --target=$HOME claude
 stow --no-folding --target=$HOME opencode
-# stow --no-folding --target=$HOME ghostty   # stale — not in active use
-# stow --no-folding --target=$HOME herdr     # stale — not in active use
 ```
 
 This creates symlinks from `$HOME` back into `~/.dotfiles/`.

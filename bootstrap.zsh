@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
-# bootstrap.sh — run on a fresh macOS machine to install everything
-# Usage: zsh ~/.dotfiles/bootstrap.sh
+# bootstrap.zsh — run on a fresh macOS machine to install everything
+# Usage: zsh ~/.dotfiles/bootstrap.zsh
 
 set -e
 
