@@ -12,44 +12,71 @@ Personal dotfiles managed with [GNU Stow](https://www.gnu.org/software/stow/).
 
 ---
 
-## Workflows & Pipelines
+## Automation: planners, pipelines, workflows
 
-Workflows and pipelines live **outside this repo** at `~/Documents/code/` — iCloud-backed on macOS, no git needed:
+The automation logic lives **outside this repo** at `~/Documents/code/` (local to each machine, no git). This repo only tracks two one-line shims.
+
+### Layers
+
+| layer | what it is | lives in |
+|-------|-----------|----------|
+| workflow | one atomic task (e.g. `test`, `query`) | `workflows/<domain>/<name>/` |
+| pipeline | runs one or more workflows (menu-driven or sequential) | `pipelines/<domain>/...` |
+| planner | natural-language entry point — discovers what exists and routes a request or ticket to it, picking a model tier per step | `planner/<name>/` |
+| orchestration | runs a set of tickets through planners with a state machine; drafts outbound updates | `orchestration/<name>/` |
+| trigger | *(future, separate repo)* external automation (e.g. n8n) that calls a planner headlessly | — |
+
+Each layer is a **flat top-level sibling**, split by domain inside. Layers are not nested by call order: pipelines still work without a planner, planners/orchestration are cross-domain, and new layers never move existing paths.
 
 ```
 ~/Documents/code/
-├── workflows/
-│   ├── obsidian/       # daily-open, bills, inbox-process, vault-setup, vault-update
-│   ├── code/           # project-setup, spec, write, refactor, review-code, test
-│   ├── database/       # optimize, query, refresh-erd
-│   ├── cases/          # new, comms, data/
-│   └── meta/           # new-workflow, new-pipeline
-├── pipelines/
-│   ├── obsidian/       # /obsidian pipeline
-│   ├── code/           # /code pipeline (+ implement, develop sub-pipelines)
-│   ├── database/       # /database pipeline
-│   ├── cases/          # /cases pipeline
-│   └── meta/           # /scaffold pipeline
-└── mcps/               # linear, notion, slack context docs
+├── workflows/          # by domain: obsidian, code, database, meta (+ work domains on the work laptop)
+├── pipelines/          # by domain: obsidian, code (+ implement, develop), database, meta/scaffold
+├── planner/
+│   ├── data/core.md    # shared rules: discovery, modes, plan format, model tiers
+│   ├── assistant/      # personal planner  → /assistant
+│   └── solutions/      # work planner      → /solutions
+├── orchestration/
+│   ├── data/           # state-machine.md, sources.md (manual, linear, helpscout)
+│   └── tickets/        # process a set of tickets
+└── _archive/           # retired content (e.g. the old cases pipeline) — moved, never deleted
 ```
 
-The `claude` and `opencode` stow packages contain shims — tiny `.md` files that reference these paths. Shims are the only workflow-related thing tracked in git, so the repo stays conflict-free across machines. Each machine has its own `~/Documents/code/` with only the workflows relevant to it.
+### Planners are the only slash commands
 
-### Shim → pipeline mapping
+| shim | planner | scope |
+|------|---------|-------|
+| `/assistant` | `planner/assistant` | personal — domains and vault in `planner/assistant/data/config.md` |
+| `/solutions` | `planner/solutions` | work — domains, vault and ticket sources in `planner/solutions/data/config.md` |
 
-| Shim | Pipeline | Options |
-|------|----------|---------|
-| `/obsidian` | `pipelines/obsidian` | daily-open, wrap-up, inbox, bills, vault-setup |
-| `/code` | `pipelines/code/code` | spec, write, review, refactor, test, project-setup, implement, develop |
-| `/database` | `pipelines/database` | query, optimize, refresh-erd |
-| `/cases` | `pipelines/cases` | new, comms |
-| `/scaffold` | `pipelines/meta/scaffold` | new-workflow, new-pipeline |
+Talk to them in natural language (`/assistant write tests for src/foo.py`, `/solutions process today's tickets`). On every call a planner globs `~/Documents/code/*/**/prompts/*.md` and reads each file's `# title`, `>` description and optional `tier`/`approval` frontmatter, so **new workflows, pipelines, planners and orchestrations need no new shims** — only their domain listed in the planner config. With no request it shows a menu of everything in scope, including creating new workflows/pipelines/planners/orchestrations (via the `meta` scaffold).
 
-### Personal vs work laptop
+Both shims are shared on every machine. A machine without a planner's content (e.g. `/solutions` on the personal laptop) simply has nothing in scope for it. A new planner = new shim pair, created by the `new-planner` scaffold.
 
-The **5 shared shims** above live in this repo and work on both personal and work machines — they all point to `~/Documents/code/` which exists independently on each machine.
+Headless use (for a future trigger): `claude -p "/solutions process today's tickets"`.
 
-The **work laptop** has 3 additional work-specific pipelines (`/csp`, `/onboard`, `/rate-card`) whose shims are **not** in this repo. They live in `~/Documents/code/dotfiles/` on the work machine and are stowed from there as a second stow pass (see work machine setup below).
+### Model tiers
+
+Plan steps carry a tier and run as subagents:
+
+| tier | Claude Code | OpenCode (`agents` in `opencode.json`) |
+|------|-------------|------------------------------------------|
+| fast | haiku | `fast` → `opencode/claude-haiku-5-5` |
+| standard | sonnet | `standard` → `opencode/claude-sonnet-5-5` |
+| deep | opus | `deep` → `opencode/claude-opus-5-5` |
+
+### Tickets live in the Obsidian vault
+
+```
+<vault>/raw/tickets/<id>/<id>.md    # ticket note + its inputs and outputs in the same folder
+<vault>/raw/runs/YYYY-MM-DD-<slug>.md
+```
+
+- Ids: `YYYYMMDD-<slug>` (manual) or `<source>-<external-id>` (e.g. `linear-SOL-1234`)
+- Frontmatter `status` follows `orchestration/data/state-machine.md`; sections `## ticket`, `## plan`, `## drafts`, `## outputs`, `## log`
+- Replaces the old `/cases` pipeline and workflow `data/reports/` folders — workflow `data/` keeps only static reference material
+- The daily note template has a `## tickets` section; "process the tickets in today's daily note" runs them
+- **Dry run:** comments and status changes for Linear/HelpScout are written to `## drafts` and only sent after explicit approval
 
 ---
 
@@ -61,11 +88,11 @@ The **work laptop** has 3 additional work-specific pipelines (`/csp`, `/onboard`
 
 | location | what it contains | managed by |
 |----------|-----------------|------------|
-| `~/.dotfiles/` | starship, nvim, zsh, 5 shared shims | git (this repo, pull-only on work) |
-| `~/Documents/code/` | workflows, pipelines, mcps, vault, 3 work-specific shims | iCloud (work machine's own Apple ID) |
-| `~/Documents/code/obsidian/leo-work-os/` | work Obsidian vault | iCloud (work machine's own Apple ID) |
+| `~/.dotfiles/` | starship, nvim, zsh, `/assistant` + `/solutions` shims, opencode config | git (this repo, pull-only on work) |
+| `~/Documents/code/` | workflows, pipelines, planner, orchestration, mcps | local to the machine |
+| `~/Documents/code/obsidian/leo-work-os/` | work Obsidian vault (tickets live in `raw/tickets/`) | local to the machine |
 
-### step 1 — clone dotfiles and stow shared config
+### step 1 — clone dotfiles and stow
 
 ```bash
 git clone git@github.com:leoga8/dotfiles.git ~/.dotfiles
@@ -77,79 +104,39 @@ stow --no-folding --target=$HOME claude
 stow --no-folding --target=$HOME opencode
 ```
 
-This gives you all 5 shared pipeline shims in `~/.claude/commands/` and `~/.opencode/commands/`.
+This gives you `/assistant` and `/solutions` in `~/.claude/commands/` and `~/.opencode/commands/`. No second stow pass is needed — work-only shims are gone.
 
 ### step 2 — transfer ~/Documents/code/
 
-Transfer the staged `~/Documents/code/` content (workflows, pipelines, mcps, dotfiles, obsidian vault) to the work machine. The expected top-level structure:
+Transfer `~/Documents/code/` to the work machine. Expected top-level structure:
 
 ```
 ~/Documents/code/
-├── obsidian/
-│   └── leo-work-os/     # work Obsidian vault
-├── workflows/
-│   ├── obsidian/        # daily-open, inbox-process, vault-setup, vault-update
-│   ├── code/            # project-setup, spec, write, refactor, review-code, test
-│   ├── database/        # optimize, query, refresh-erd (+ real ERD/schema data files)
-│   ├── cases/           # new, comms, data/
-│   ├── solutions/       # csp-docs, customer-onboarding, rate-cards
-│   └── meta/            # new-workflow, new-pipeline
-├── pipelines/
-│   ├── obsidian/        # /obsidian pipeline (no bills)
-│   ├── code/            # /code, /implement, /develop pipelines
-│   ├── database/        # /database pipeline
-│   ├── cases/           # /cases pipeline
-│   ├── meta/            # /scaffold pipeline
-│   ├── csp/             # /csp pipeline
-│   ├── onboard/         # /onboard pipeline
-│   └── rate-card/       # /rate-card pipeline
-├── mcps/                # linear, slack, notion MCP setup docs
-└── dotfiles/            # work-specific shims (stowed in step 3)
-    ├── claude/.claude/commands/
-    │   ├── csp.md
-    │   ├── onboard.md
-    │   └── rate-card.md
-    └── opencode/.opencode/commands/
-        ├── csp.md
-        ├── onboard.md
-        └── rate-card.md
+├── obsidian/leo-work-os/   # work Obsidian vault
+├── workflows/              # incl. solutions/ (csp-docs, customer-onboarding, rate-cards)
+├── pipelines/              # incl. csp/, onboard/, rate-card/
+├── planner/                # assistant/, solutions/, data/core.md
+├── orchestration/          # tickets/, data/
+└── mcps/                   # linear, slack, notion, helpscout setup docs
 ```
 
-### step 3 — stow work-specific shims
+### step 3 — planner config
 
-```bash
-cd ~/Documents/code
-stow --no-folding --target=$HOME dotfiles
-```
-
-This adds `/csp`, `/onboard`, `/rate-card` to `~/.claude/commands/` and `~/.opencode/commands/` alongside the 5 from step 1. No conflicts — different filenames.
-
-### full shim list on work machine
-
-| shim | pipeline | source |
-|------|----------|--------|
-| `/obsidian` | `pipelines/obsidian` | `~/.dotfiles` (shared) |
-| `/code` | `pipelines/code/code` | `~/.dotfiles` (shared) |
-| `/database` | `pipelines/database` | `~/.dotfiles` (shared) |
-| `/cases` | `pipelines/cases` | `~/.dotfiles` (shared) |
-| `/scaffold` | `pipelines/meta/scaffold` | `~/.dotfiles` (shared) |
-| `/csp` | `pipelines/csp` | `~/Documents/code/dotfiles` (work-only) |
-| `/onboard` | `pipelines/onboard` | `~/Documents/code/dotfiles` (work-only) |
-| `/rate-card` | `pipelines/rate-card` | `~/Documents/code/dotfiles` (work-only) |
-
-### step 4 — vault config
-
-Update `~/Documents/code/workflows/cases/data/config.md` to confirm the vault path:
+Edit `~/Documents/code/planner/solutions/data/config.md`:
 
 ```
-vault_path: ~/Documents/code/obsidian/leo-work-os
+- **vault_path:** ~/Documents/code/obsidian/leo-work-os
+- **domains:** solutions, csp, onboard, rate-card, code, database, meta
+- **sources:** manual, linear, helpscout
 ```
 
-### step 5 — MCP setup
+`domains` must match the folder names under `workflows/` and `pipelines/` for the work pipelines.
 
-`~/.config/opencode/opencode.json` (stowed from this repo) already has MCP entries for Linear, Slack, and Notion configured with env var placeholders — it silently skips any MCP whose env var is not set, so the file is safe on personal machines too.
+### step 4 — MCP setup
 
-Add the following to `~/.zshrc` on the **work laptop only**:
+`~/.config/opencode/opencode.json` (stowed from this repo) already has MCP entries for Linear, Slack, Notion and HelpScout configured with env var placeholders — it silently skips any MCP whose env var is not set, so the file is safe on personal machines too.
+
+Add the following to `~/.secrets` (sourced by `~/.zshrc`) on the **work laptop only**:
 
 ```bash
 # Work MCPs for OpenCode
@@ -162,22 +149,16 @@ export HELPSCOUT_API_KEY="Bearer your-personal-access-token-here"
 
 Note: the `Bearer ` prefix is part of the `HELPSCOUT_API_KEY` value.
 
-See `~/Documents/code/mcps/` for step-by-step instructions on obtaining each credential:
-
-- `mcps/linear.md` → Linear personal API key (Settings → API → Personal API keys)
-- `mcps/slack.md` → Slack bot token + workspace team ID
-- `mcps/notion.md` → Notion internal integration token
-- `mcps/helpscout.md` → HelpScout Personal Access Token (Your Profile → API Keys)
+See `~/Documents/code/mcps/` for how to obtain each credential (`linear.md`, `slack.md`, `notion.md`, `helpscout.md`).
 
 Claude Code MCPs are enabled org-wide via Hologram's Claude settings — no manual config needed there.
 
 ### new job / new work laptop
 
-If starting fresh with a new employer:
 1. Follow steps 1–3 above
-2. For the vault: run `/obsidian` → vault-setup → work (greenfield) — it scaffolds the full work vault structure from `~/Documents/code/workflows/obsidian/vault-setup/`
-3. For work-specific workflows (`/csp`, `/onboard`, `/rate-card`): the pipeline stubs are in place but their workflows reference employer-specific data files. You'll need to rebuild the `data/` folders in `workflows/solutions/csp-docs/`, `workflows/solutions/customer-onboarding/`, and `workflows/solutions/rate-cards/` with the new employer's context
-4. Update `~/Documents/code/workflows/cases/data/config.md` with the new vault path
+2. For the vault: `/solutions set up a new work vault` → routes to obsidian vault-setup (greenfield) — scaffolds the vault including `raw/tickets/` and `raw/runs/`
+3. For work-specific workflows: rebuild the static `data/` reference files in `workflows/solutions/*` with the new employer's context
+4. Set `vault_path` in `planner/solutions/data/config.md`
 
 ---
 
