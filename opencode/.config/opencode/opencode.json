@@ -20,33 +20,26 @@
     }
   },
   "mcp": {
-    "linear": {
-      "type": "local",
-      "command": ["npx", "-y", "@modelcontextprotocol/server-linear"],
-      "environment": {
-        "LINEAR_API_KEY": "${LINEAR_API_KEY}"
-      }
-    },
-    "slack": {
-      "type": "local",
-      "command": ["npx", "-y", "@modelcontextprotocol/server-slack"],
-      "environment": {
-        "SLACK_BOT_TOKEN": "${SLACK_BOT_TOKEN}",
-        "SLACK_TEAM_ID": "${SLACK_TEAM_ID}"
-      }
-    },
-    "notion": {
-      "type": "local",
-      "command": ["npx", "-y", "@modelcontextprotocol/server-notion"],
-      "environment": {
-        "NOTION_API_KEY": "${NOTION_API_KEY}"
-      }
-    },
-    "helpscout": {
-      "type": "local",
-      "command": ["npx", "-y", "help-scout-mcp-server"],
-      "environment": {
-        "HELPSCOUT_API_KEY": "${HELPSCOUT_API_KEY}"
+    "servers": {
+      "linear": {
+        "type": "remote",
+        "url": "https://mcp.linear.app/mcp"
+      },
+      "notion": {
+        "type": "remote",
+        "url": "https://mcp.notion.com/mcp"
+      },
+      "helpscout": {
+        "type": "local",
+        "command": ["npx", "-y", "help-scout-mcp-server"],
+        "environment": {
+          "HELPSCOUT_APP_ID": "{env:HELPSCOUT_APP_ID}",
+          "HELPSCOUT_APP_SECRET": "{env:HELPSCOUT_APP_SECRET}"
+        }
+      },
+      "sigma": {
+        "type": "remote",
+        "url": "https://aws-api.sigmacomputing.com/mcp/v2"
       }
     }
   },

@@ -145,20 +145,24 @@ Edit `~/Documents/code/planner/solutions/config.md`:
 
 ### step 4 — MCP setup
 
-`~/.config/opencode/opencode.json` (stowed from this repo) already has MCP entries for Linear, Slack, Notion and HelpScout configured with env var placeholders — it silently skips any MCP whose env var is not set, so the file is safe on personal machines too.
+`~/.config/opencode/opencode.json` (stowed from this repo) defines four MCP servers. On a machine where you don't use them they just stay unauthenticated, so the file is safe on personal machines too.
 
-Add the following to `~/.secrets` (sourced by `~/.zshrc`) on the **work laptop only**:
+| server | type | how to connect |
+|--------|------|----------------|
+| Linear | remote (`https://mcp.linear.app/mcp`) | `opencode mcp auth linear` — browser OAuth |
+| Notion | remote (`https://mcp.notion.com/mcp`) | `opencode mcp auth notion` — browser OAuth |
+| Sigma | remote (`https://aws-api.sigmacomputing.com/mcp/v2`) | `opencode mcp auth sigma` — browser OAuth |
+| HelpScout | local (`npx help-scout-mcp-server`) | env vars below |
+
+Add the HelpScout app credentials to `~/.secrets` (sourced by `~/.zshrc`) on the **work laptop only**:
 
 ```bash
-# Work MCPs for OpenCode
-export LINEAR_API_KEY="lin_api_your_key_here"
-export SLACK_BOT_TOKEN="xoxb-your-token-here"
-export SLACK_TEAM_ID="T0123ABCDEF"
-export NOTION_API_KEY="secret_your_token_here"
-export HELPSCOUT_API_KEY="Bearer your-personal-access-token-here"
+# HelpScout MCP for OpenCode
+export HELPSCOUT_APP_ID="your-app-id"
+export HELPSCOUT_APP_SECRET="your-app-secret"
 ```
 
-Note: the `Bearer ` prefix is part of the `HELPSCOUT_API_KEY` value.
+Check everything with `opencode mcp list`.
 
 Claude Code MCPs are enabled org-wide via Hologram's Claude settings — no manual config needed there.
 
