@@ -30,24 +30,26 @@ Each layer is a **flat top-level sibling**, split by domain inside. Layers are n
 
 ```
 ~/Documents/code/
-├── workflows/          # by domain: obsidian, code, database, meta (+ work domains on the work laptop)
-├── pipelines/          # by domain: obsidian, code (+ implement, develop), database, meta/scaffold
+├── workflows/          # by domain: obsidian, code, database, meta (+ solutions on the work laptop)
+│   └── <domain>/<name>/{prompts,context,tools}   # context/ = static reference only; no data/ folders
+├── pipelines/          # by domain, prompts only: obsidian, code (+ implement, develop), database, meta/scaffold
 ├── planner/
-│   ├── data/core.md    # shared rules: discovery, modes, plan format, model tiers
-│   ├── assistant/      # personal planner  → /assistant
-│   └── solutions/      # work planner      → /solutions
-├── orchestration/
-│   ├── data/           # state-machine.md, sources.md (manual, linear, helpscout)
+│   ├── core.md         # shared rules: discovery, modes, ticket + plan formats, model tiers, drafts
+│   ├── sources.md      # how to fetch / comment / set status: manual, linear, helpscout
+│   ├── assistant/      # personal planner  → /assistant   (prompts/, config.md)
+│   └── solutions/      # work planner      → /solutions   (prompts/, config.md, + shared-repo files)
+├── orchestration/      # personal only — never shared
+│   ├── state-machine.md
 │   └── tickets/        # process a set of tickets
-└── _archive/           # retired content (e.g. the old cases pipeline) — moved, never deleted
+└── _archive/           # retired content (old cases pipeline, reports, customer files) — moved, never deleted
 ```
 
 ### Planners are the only slash commands
 
 | shim | planner | scope |
 |------|---------|-------|
-| `/assistant` | `planner/assistant` | personal — domains and vault in `planner/assistant/data/config.md` |
-| `/solutions` | `planner/solutions` | work — domains, vault and ticket sources in `planner/solutions/data/config.md` |
+| `/assistant` | `planner/assistant` | personal — domains and vault in `planner/assistant/config.md` |
+| `/solutions` | `planner/solutions` | work — domains, vault and ticket sources in `planner/solutions/config.md` |
 
 Talk to them in natural language (`/assistant write tests for src/foo.py`, `/solutions process today's tickets`). On every call a planner globs `~/Documents/code/*/**/prompts/*.md` and reads each file's `# title`, `>` description and optional `tier`/`approval` frontmatter, so **new workflows, pipelines, planners and orchestrations need no new shims** — only their domain listed in the planner config. With no request it shows a menu of everything in scope, including creating new workflows/pipelines/planners/orchestrations (via the `meta` scaffold).
 
@@ -65,18 +67,26 @@ Plan steps carry a tier and run as subagents:
 | standard | sonnet | `standard` → `opencode/claude-sonnet-5-5` |
 | deep | opus | `deep` → `opencode/claude-opus-5-5` |
 
-### Tickets live in the Obsidian vault
+### Tickets hold all per-case files
 
 ```
-<vault>/raw/tickets/<id>/<id>.md    # ticket note + its inputs and outputs in the same folder
+<tickets_path>/<id>/<id>.md         # ticket note + every input and output file for that ticket
 <vault>/raw/runs/YYYY-MM-DD-<slug>.md
 ```
 
+`tickets_path` is set per planner config — `<vault>/raw/tickets` on your machines, `<repo>/tickets` (gitignored) for teammates.
+
 - Ids: `YYYYMMDD-<slug>` (manual) or `<source>-<external-id>` (e.g. `linear-SOL-1234`)
-- Frontmatter `status` follows `orchestration/data/state-machine.md`; sections `## ticket`, `## plan`, `## drafts`, `## outputs`, `## log`
-- Replaces the old `/cases` pipeline and workflow `data/reports/` folders — workflow `data/` keeps only static reference material
+- Frontmatter `status` follows `orchestration/state-machine.md`; sections `## ticket`, `## plan`, `## drafts`, `## outputs`, `## log`
+- Replaces the old `/cases` pipeline and every `data/` / `reports/` folder — workflows read inputs from and write outputs to the ticket folder; `context/` holds only static reference
 - The daily note template has a `## tickets` section; "process the tickets in today's daily note" runs them
 - **Dry run:** comments and status changes for Linear/HelpScout are written to `## drafts` and only sent after explicit approval
+
+### Shared team repo (`solutions-workflows`)
+
+Teammates get `/solutions` only: `planner/core.md`, `planner/sources.md`, the solutions planner, and the in-scope pipelines and workflows. Never shared: `/assistant`, `orchestration/`, configs, tickets, `_archive/`, any future trigger. Their setup guide is `planner/solutions/INSTALL.md` (synced to the repo root).
+
+To share changes: on the work laptop, `/solutions sync the shared repo` (runs `workflows/meta/sync-shared-repo`) → review the staged diff in the repo → `git commit` and `git push` yourself.
 
 ---
 
@@ -89,7 +99,7 @@ Plan steps carry a tier and run as subagents:
 | location | what it contains | managed by |
 |----------|-----------------|------------|
 | `~/.dotfiles/` | starship, nvim, zsh, `/assistant` + `/solutions` shims, opencode config | git (this repo, pull-only on work) |
-| `~/Documents/code/` | workflows, pipelines, planner, orchestration, mcps | local to the machine |
+| `~/Documents/code/` | workflows, pipelines, planner, orchestration | local to the machine |
 | `~/Documents/code/obsidian/leo-work-os/` | work Obsidian vault (tickets live in `raw/tickets/`) | local to the machine |
 
 ### step 1 — clone dotfiles and stow
@@ -115,18 +125,19 @@ Transfer `~/Documents/code/` to the work machine. Expected top-level structure:
 ├── obsidian/leo-work-os/   # work Obsidian vault
 ├── workflows/              # incl. solutions/ (csp-docs, customer-onboarding, rate-cards)
 ├── pipelines/              # incl. csp/, onboard/, rate-card/
-├── planner/                # assistant/, solutions/, data/core.md
-├── orchestration/          # tickets/, data/
-└── mcps/                   # linear, slack, notion, helpscout setup docs
+├── planner/                # core.md, sources.md, assistant/, solutions/
+└── orchestration/          # state-machine.md, tickets/
 ```
 
 ### step 3 — planner config
 
-Edit `~/Documents/code/planner/solutions/data/config.md`:
+Edit `~/Documents/code/planner/solutions/config.md`:
 
 ```
+- **root:** ~/Documents/code
 - **vault_path:** ~/Documents/code/obsidian/leo-work-os
-- **domains:** solutions, csp, onboard, rate-card, code, database, meta
+- **tickets_path:** <vault_path>/raw/tickets
+- **domains:** solutions, csp, onboard, rate-card, code, database, meta, obsidian
 - **sources:** manual, linear, helpscout
 ```
 
@@ -149,16 +160,14 @@ export HELPSCOUT_API_KEY="Bearer your-personal-access-token-here"
 
 Note: the `Bearer ` prefix is part of the `HELPSCOUT_API_KEY` value.
 
-See `~/Documents/code/mcps/` for how to obtain each credential (`linear.md`, `slack.md`, `notion.md`, `helpscout.md`).
-
 Claude Code MCPs are enabled org-wide via Hologram's Claude settings — no manual config needed there.
 
 ### new job / new work laptop
 
 1. Follow steps 1–3 above
 2. For the vault: `/solutions set up a new work vault` → routes to obsidian vault-setup (greenfield) — scaffolds the vault including `raw/tickets/` and `raw/runs/`
-3. For work-specific workflows: rebuild the static `data/` reference files in `workflows/solutions/*` with the new employer's context
-4. Set `vault_path` in `planner/solutions/data/config.md`
+3. For work-specific workflows: rebuild the static `context/` reference files in `workflows/solutions/*` with the new employer's context
+4. Set `vault_path` in `planner/solutions/config.md`
 
 ---
 
