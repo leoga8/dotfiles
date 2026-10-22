@@ -14,7 +14,7 @@ Personal dotfiles managed with [GNU Stow](https://www.gnu.org/software/stow/).
 
 ## Automation: planners, pipelines, workflows
 
-The automation logic lives **outside this repo** at `~/Documents/code/` (local to each machine, no git). This repo only tracks two one-line shims.
+The automation logic lives **outside this repo** at `~/Documents/code/` (local to each machine, no git). This repo tracks two one-line shims plus **reference copies** of the essential planner and state-machine files under `examples/` (see [Recreate the planner + state machine](#recreate-the-planner--state-machine)).
 
 ### Layers
 
@@ -143,6 +143,8 @@ Edit `~/Documents/code/planner/solutions/config.md`:
 
 `domains` must match the folder names under `workflows/` and `pipelines/` for the work pipelines.
 
+If there is nothing to transfer in step 2, follow [Recreate the planner + state machine](#recreate-the-planner--state-machine) first. It starts from `examples/code/planner/solutions/config.example.md`, which already has these values.
+
 ### step 4 — MCP setup
 
 `~/.config/opencode/opencode.json` (stowed from this repo) defines four MCP servers. On a machine where you don't use them they just stay unauthenticated, so the file is safe on personal machines too.
@@ -154,7 +156,7 @@ Edit `~/Documents/code/planner/solutions/config.md`:
 | Sigma | remote (`https://aws-api.sigmacomputing.com/mcp/v2`) | `opencode mcp auth sigma` — browser OAuth |
 | HelpScout | local (`npx help-scout-mcp-server`) | env vars below |
 
-Add the HelpScout app credentials to `~/.secrets` (sourced by `~/.zshrc`) on the **work laptop only**:
+Add the HelpScout app credentials to `~/.secrets` (sourced by `~/.zshrc`) on the **work laptop only**. Start from `cp ~/.dotfiles/examples/secrets.example ~/.secrets`:
 
 ```bash
 # HelpScout MCP for OpenCode
@@ -172,6 +174,60 @@ Claude Code MCPs are enabled org-wide via Hologram's Claude settings — no manu
 2. For the vault: `/solutions set up a new work vault` → routes to obsidian vault-setup (greenfield) — scaffolds the vault including `raw/tickets/` and `raw/runs/`
 3. For work-specific workflows: rebuild the static `context/` reference files in `workflows/solutions/*` with the new employer's context
 4. Set `vault_path` in `planner/solutions/config.md`
+
+---
+
+## Recreate the planner + state machine
+
+> Use this on any machine (personal or work) where `~/Documents/code/` doesn't exist yet. Point Claude at this section and it can follow it step by step. `examples/` is reference only: it is never stowed, and real configs, tickets, secrets and work-domain content never go in it.
+
+### what's in `examples/`
+
+```
+examples/
+├── code/                                  # mirrors ~/Documents/code/
+│   ├── planner/
+│   │   ├── core.md                        # shared rules: discovery, modes, ticket + plan formats, tiers, drafts
+│   │   ├── sources.md                     # manual / linear / helpscout: get, comment, set status
+│   │   ├── assistant/{prompts/assistant.md, config.example.md}
+│   │   └── solutions/{prompts/solutions.md, config.example.md}
+│   ├── orchestration/
+│   │   ├── state-machine.md               # ticket statuses, transitions, drafts/approval rules
+│   │   └── tickets/prompts/tickets.md     # processes a set of tickets through planners
+│   ├── workflows/meta/new-{workflow,pipeline,planner,orchestration}/prompts/*.md
+│   └── pipelines/meta/scaffold/prompts/scaffold.md
+├── vault/raw/templates/ticket.md          # ticket note template for the vault
+└── secrets.example                        # ~/.secrets placeholders (work only)
+```
+
+The scaffold's `sync-shared-repo` option is work-only and isn't included. Add it on the work laptop.
+
+### steps
+
+1. **Check first.** If `~/Documents/code/planner/core.md` already exists, stop: this machine already has its files.
+2. **Copy the examples in** without overwriting anything:
+   ```bash
+   mkdir -p ~/Documents/code
+   cp -Rn ~/.dotfiles/examples/code/ ~/Documents/code/
+   ```
+   On a work machine without orchestration, delete `~/Documents/code/orchestration/` (and `planner/assistant/` if you don't want it there).
+3. **Create each planner config** you use on this machine and fill in `vault_path` (and `domains` if needed):
+   ```bash
+   cp ~/Documents/code/planner/assistant/config.example.md ~/Documents/code/planner/assistant/config.md
+   cp ~/Documents/code/planner/solutions/config.example.md ~/Documents/code/planner/solutions/config.md
+   ```
+   Placeholders are fine to leave: the planner asks for any missing value on first run and saves it.
+4. **Vault.** The planner and state machine expect these in `<vault_path>`:
+   - `AGENTS.md` (vault structure and schemas, read in question mode)
+   - `raw/tickets/`, `raw/runs/`, `raw/daily/YYYY/MM/`
+   - `raw/templates/daily.md` with a `## tickets` section (orchestration reads it for "today's tickets")
+   - `raw/templates/ticket.md`: copy it from `examples/vault/raw/templates/ticket.md`
+
+   For a brand-new vault, scaffold it with the obsidian `vault-setup` workflow if present, or `/assistant create a workflow` for one.
+5. **Rebuild domain workflows and pipelines** (`obsidian`, `code`, `database`, work domains) as needed with `/assistant create a workflow ...` or `/assistant create a pipeline ...`. Each new domain must also be listed in the planner's `domains`.
+6. **Verify:**
+   - `claude -p "/assistant"` (or `/solutions`) shows the menu, including **process tickets** when `orchestration/` exists
+   - `/assistant track setup smoke test` creates `<tickets_path>/<id>/<id>.md` with `status: new`. Delete that folder afterwards.
 
 ---
 
@@ -260,6 +316,23 @@ git add .
 git commit -m "describe what changed"
 git push
 ```
+
+### keeping examples current
+
+After changing any of the essential files in `~/Documents/code/`, copy them back into `examples/` and commit:
+
+```bash
+cd ~/Documents/code
+for f in planner/core.md planner/sources.md \
+         planner/assistant/prompts/assistant.md planner/solutions/prompts/solutions.md \
+         orchestration/state-machine.md orchestration/tickets/prompts/tickets.md \
+         workflows/meta/new-{workflow,pipeline,planner,orchestration}/prompts/*.md \
+         pipelines/meta/scaffold/prompts/scaffold.md; do
+  cp "$f" ~/.dotfiles/examples/code/"$f"
+done
+```
+
+Never copy the real `config.md` files: edit the `config.example.md` files in `examples/` directly.
 
 To pull updates on another machine:
 
