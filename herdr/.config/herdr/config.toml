@@ -7,7 +7,7 @@ status_indicators = "symbols"
 enabled = true
 
 [ui.toast]
-delivery = "system"
+delivery = "terminal"
 
 [theme]
 name = "terminal"
