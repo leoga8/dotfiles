@@ -1,0 +1,17 @@
+onboarding = false
+
+[ui]
+status_indicators = "symbols"
+
+[ui.sound]
+enabled = true
+
+[ui.toast]
+delivery = "system"
+
+[theme]
+name = "nord"
+auto_switch = false
+
+[keys]
+prefix = "ctrl+s"

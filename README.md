@@ -5,8 +5,10 @@ Personal dotfiles managed with [GNU Stow](https://www.gnu.org/software/stow/).
 ## Configs included
 
 - `starship` — `~/.config/starship.toml`
+- `ghostty` — `~/.config/ghostty/config`
 - `nvim` — `~/.config/nvim/`
 - `zsh` — `~/.zshrc`
+- `herdr` — `~/.config/herdr/config.toml`
 - `claude` — `~/.claude/commands/` (global Claude Code slash commands)
 - `opencode` — `~/.config/opencode/` and `~/.opencode/commands/` (OpenCode config + slash commands)
 
@@ -112,6 +114,8 @@ stow --no-folding --target=$HOME nvim
 stow --no-folding --target=$HOME zsh
 stow --no-folding --target=$HOME claude
 stow --no-folding --target=$HOME opencode
+stow --no-folding --target=$HOME ghostty
+stow --no-folding --target=$HOME herdr
 ```
 
 This gives you `/assistant` and `/solutions` in `~/.claude/commands/` and `~/.opencode/commands/`. No second stow pass is needed — work-only shims are gone.
@@ -269,6 +273,8 @@ stow --no-folding --target=$HOME nvim
 stow --no-folding --target=$HOME zsh
 stow --no-folding --target=$HOME claude
 stow --no-folding --target=$HOME opencode
+stow --no-folding --target=$HOME ghostty
+stow --no-folding --target=$HOME herdr
 ```
 
 This creates symlinks from `$HOME` back into `~/.dotfiles/`.

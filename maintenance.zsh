@@ -22,7 +22,7 @@ if [[ $(uname) == "Darwin" ]]; then
 		"yes | brew upgrade --cask"
 		# Upgrade casks that ignore brew upgrade --cask (auto-update flag)
 		"yes | brew upgrade --cask obsidian"
-		# "yes | brew upgrade --cask ghostty"
+		"yes | brew upgrade --cask ghostty"
 		"yes | brew upgrade --cask warp"
 		"yes | brew upgrade --cask spotify"
 		"yes | brew upgrade --cask brave-browser"
@@ -31,7 +31,7 @@ if [[ $(uname) == "Darwin" ]]; then
 		"yes | brew upgrade --cask claude"
 		# "yes | brew upgrade --cask dbeaver-community"
 		# Upgrade herdr which doesn;t update with just brew upgrade for some reason
-		# "yes | brew upgrade herdr"
+		"yes | brew upgrade herdr"
 		# Cleanup space
 		"brew cleanup --prune=all"
 		# Diagnose any issues
