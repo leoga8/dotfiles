@@ -10,7 +10,7 @@ enabled = true
 delivery = "system"
 
 [theme]
-name = "vesper"
+name = "terminal"
 auto_switch = false
 
 [keys]
