@@ -40,6 +40,16 @@
       "sigma": {
         "type": "remote",
         "url": "https://aws-api.sigmacomputing.com/mcp/v2"
+      },
+      "slack": {
+        "type": "remote",
+        "url": "https://mcp.slack.com/mcp",
+        "oauth": {
+          "client_id": "{env:SLACK_MCP_CLIENT_ID}",
+          "client_secret": "{env:SLACK_MCP_CLIENT_SECRET}",
+          "callback_port": 19876,
+          "redirect_uri": "http://127.0.0.1:19876/callback"
+        }
       }
     }
   },
