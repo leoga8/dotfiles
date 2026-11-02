@@ -9,6 +9,7 @@ Personal dotfiles managed with [GNU Stow](https://www.gnu.org/software/stow/).
 - `nvim` — `~/.config/nvim/`
 - `zsh` — `~/.zshrc`
 - `herdr` — `~/.config/herdr/config.toml`
+- `herdr-app` — `~/.config/herdr-app/` (`settings.json`, `keys.json`, own `agent-jump-*` mods; everything else there is written by Herdr)
 - `claude` — `~/.claude/commands/` (global Claude Code slash commands)
 - `opencode` — `~/.config/opencode/` and `~/.opencode/commands/` (OpenCode config + slash commands)
 
@@ -116,6 +117,7 @@ stow --no-folding --target=$HOME claude
 stow --no-folding --target=$HOME opencode
 stow --no-folding --target=$HOME ghostty
 stow --no-folding --target=$HOME herdr
+stow --no-folding --target=$HOME herdr-app
 ```
 
 This gives you `/assistant` and `/solutions` in `~/.claude/commands/` and `~/.opencode/commands/`. No second stow pass is needed — work-only shims are gone.
@@ -262,6 +264,7 @@ unlink ~/.config/starship.toml
 rm -rf ~/.config/nvim
 unlink ~/.zshrc
 rm ~/.zshrc                       # if it's a regular file
+rm ~/.config/herdr-app/settings.json ~/.config/herdr-app/keys.json   # Herdr's defaults; quit Herdr first or it recreates them
 ```
 
 ### 4. Stow the configs
@@ -275,6 +278,7 @@ stow --no-folding --target=$HOME claude
 stow --no-folding --target=$HOME opencode
 stow --no-folding --target=$HOME ghostty
 stow --no-folding --target=$HOME herdr
+stow --no-folding --target=$HOME herdr-app
 ```
 
 This creates symlinks from `$HOME` back into `~/.dotfiles/`.

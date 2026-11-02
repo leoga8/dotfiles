@@ -1,0 +1,11 @@
+{
+  "zoom": 1,
+  "sounds": {
+    "enabled": true
+  },
+  "minimum_contrast": 1,
+  "appearance": "dark",
+  "font": "Hack Nerd Font Mono",
+  "font_size": 12,
+  "ui_font": "Hack Nerd Font Mono"
+}
