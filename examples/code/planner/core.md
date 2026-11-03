@@ -151,20 +151,33 @@ Rules:
 
 ## 4. running a step
 
-Run each step as a subagent so the tier controls the model:
+Run each step as its own worker so the tier controls the model and effort — never a bigger tier than the step needs:
 
-| tier | Claude Code (`model` on the subagent) | OpenCode (subagent) |
-|------|--------------------------------------|---------------------|
-| fast | `haiku` | `@fast` |
-| standard | `sonnet` | `@standard` |
-| deep | `opus` | `@deep` |
+| tier | model | effort | hc template | OpenCode (subagent) |
+|------|-------|--------|-------------|---------------------|
+| fast | `haiku` | `low` | `fast` | `@fast` |
+| standard | `sonnet` | `medium` | `standard` | `@standard` |
+| deep | `opus` | `high` | `deep` | `@deep` |
 
-The subagent prompt must include:
+The worker prompt must include:
 - `root=<root>`, the target prompt path and `option=<x> ticket=<ticket note path>`
 - the step's `inputs` and `success`
-- this hard rule: "Only load these workflow files: <allowed_workflows>. Read inputs from and write all outputs into `<ticket folder>`. Do not send anything to external systems. If you reach an approval point, stop and report it."
+- the result file: `<ticket folder>/step-<n>.result.md` (what was done, files written, anything left open; or the approval question)
+- this hard rule: "Only load these workflow files: <allowed_workflows>. Read inputs from and write all outputs into `<ticket folder>`. Do not send anything to external systems. If you reach an approval point, write the question to the result file and stop."
 
-If a step stops at an approval point, show it to the user, get the answer, and resume the step with that answer. After each step, record the result in the ticket's `## outputs` and `## log`, and mark the step heading `✅` (done), `⏸` (blocked) or `❌` (failed).
+**Where the worker runs** — pick the first that applies:
+
+1. **hc worker** (in Herdr: `$HC_TERMINAL_ID` is set and `hc templates` lists the tier). The worker is a visible sub-agent of this session in Herdr's agents list (peek / Cmd-click to watch it). Run steps one at a time:
+   ```sh
+   hc run --bg --no-notify --cwd <root> --name <ticket-id>-s<n> <tier> "<worker prompt>"
+   hc wait <ticket-id>-s<n>        # reason timeout = check-in, wait again
+   ```
+   - If the launch shows `first_message.sent: false`, `hc read` the worker; handle a startup dialog, then `hc send` the prompt. Never resend blindly.
+   - If the wait ends with status `blocked`, the worker is waiting on a permission prompt or question: tell the user its name so they can peek and answer, then wait again.
+   - When it is `done` or `idle`, read the result file (not its screen), then `hc kill <name>; hc rm <name>`.
+2. **In-process subagent** (no Herdr, e.g. teammates or OpenCode): Claude Code subagent with the tier's `model` and `effort`; OpenCode's tier subagent.
+
+If a step stops at an approval point, show it to the user, get the answer, and resume the step with a new worker at the same tier, passing the answer and the previous result file. After each step, record the result in the ticket's `## outputs` and `## log`, and mark the step heading `✅` (done), `⏸` (blocked) or `❌` (failed).
 
 ---
 

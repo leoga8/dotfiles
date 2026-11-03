@@ -61,7 +61,7 @@ Show the resolved list (id, title, current status) and confirm before going furt
 For each ticket whose status is `new`, missing, or `planned` with a re-plan requested:
 
 1. If it comes from an external source: `get` it per `planner/sources.md` and write/update the ticket note (create from `raw/templates/ticket.md` if needed).
-2. Invoke the ticket's planner (frontmatter `planner`, default: the calling planner) in **ticket mode** as a subagent — it writes `## plan` and sets `status: planned`.
+2. Invoke the ticket's planner (frontmatter `planner`, default: the calling planner) in **ticket mode** as a `standard`-tier worker per **4. running a step** in `~/Documents/code/planner/core.md` (name it `<ticket-id>-plan`) — it writes `## plan` and sets `status: planned`.
 
 Tickets already past `planned` are not re-planned.
 
