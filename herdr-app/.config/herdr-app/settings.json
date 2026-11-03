@@ -6,7 +6,7 @@
   "minimum_contrast": 1,
   "appearance": "dark",
   "font": "Hack Nerd Font Mono",
-  "font_size": 12,
+  "font_size": 14,
   "ui_font": "Hack Nerd Font Mono",
   "telemetry": false
 }
