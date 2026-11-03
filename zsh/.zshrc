@@ -18,6 +18,16 @@ fcd () {
 	dir=$(fd --type d --hidden --follow --exclude .git . "${1:-.}" 2>/dev/null | fzf --height 40% --reverse --preview 'ls -la --color=always {}' +m)
 	[[ -n "$dir" ]] && cd -- "$dir"
 }
+
+# Clear a stale OpenCode agent label stuck in the herdr TUI after /exit
+herdr-release-agent () {
+	herdr pane release-agent --source herdr:opencode --agent opencode "$(herdr pane current | jq -r '.result.pane.pane_id')"
+}
+
+# Clear a stale OpenCode agent label stuck in Herdr App (herdr-core) after /exit
+hc-clear-agent () {
+	printf '\033]7501;state=clear\033\\'
+}
 ######################
 
 # Set name of the theme to load --- if set to "random", it will
