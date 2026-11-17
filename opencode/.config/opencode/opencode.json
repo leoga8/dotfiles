@@ -11,7 +11,7 @@
     "standard": {
       "description": "Standard-tier subagent for most planner steps (tier: standard).",
       "mode": "subagent",
-      "model": "opencode/claude-sonnet-5-5#medium"
+      "model": "openai/gpt-6-sol#medium"
     },
     "deep": {
       "description": "Deep-tier subagent for ambiguous, multi-file or high-risk planner steps (tier: deep).",
