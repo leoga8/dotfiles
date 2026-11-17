@@ -70,7 +70,7 @@ Plan steps carry a tier that sets the model and effort of the worker that runs t
 
 The work orchestrator itself runs on sonnet at low effort: `claude --model sonnet --effort low`, or for OpenCode `~/Documents/code/opencode.json` (`"model": "opencode/claude-sonnet-5-5#low"`). `~/Documents/code/automation/work-morning.sh [--claudecode | --opencode]` starts it.
 
-In Rex with Claude Code, each step runs as its own `claude` tab started by `~/Documents/code/automation/rex-worker.sh` (see `automation/workers.md`), so you can switch to a worker to watch or answer it. Elsewhere (no Rex, OpenCode, teammates) steps run as in-process subagents with the same model and effort.
+In Rex, each step runs as its own tab, running the same agent as the orchestrator (Claude Code, or OpenCode with the tier agent's model), started by `~/Documents/code/automation/rex-worker.sh` (see `automation/workers.md`), so you can switch to a worker to watch or answer it. Elsewhere (no Rex, teammates) steps run as in-process subagents with the same model and effort.
 
 ### Tickets hold all per-case files
 
