@@ -64,7 +64,7 @@ Plan steps carry a tier that sets the model and effort of the worker that runs t
 
 | tier | Claude Code | OpenCode (`agents` in `opencode.json`) |
 |------|-------------|------------------------------------------|
-| fast | haiku, low effort | `fast` → `opencode/claude-haiku-5-5#low` |
+| fast | haiku, low effort | `fast` → `openai/gpt-6-luna#low` (ChatGPT subscription; needs `opencode auth login` with OpenAI) |
 | standard | sonnet, medium effort | `standard` → `opencode/claude-sonnet-5-5#medium` |
 | deep | opus, high effort | `deep` → `opencode/claude-opus-5-5#high` |
 
