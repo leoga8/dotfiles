@@ -55,13 +55,17 @@ Show the resolved list (id, title, current status) and confirm before going furt
   ## log
   ```
 - Resume: read the existing run note and continue — every ticket picks up from its current `status`.
+- Catalog: run discovery (**1. discovery** in `~/Documents/code/planner/core.md`) once and write the in-scope entries (path, layer, domain, tier, title, description; one line each) to `<vault_path>/raw/runs/YYYY-MM-DD-<slug>-catalog.md`. On resume, reuse the existing catalog. Pass `catalog=<path>` to every worker that would otherwise run discovery.
 
 ### 3. fetch and plan
 
-For each ticket whose status is `new`, missing, or `planned` with a re-plan requested:
+For each ticket whose status is `new`, missing, or `planned` with a re-plan requested, start one plan worker (named `<ticket-id>-plan`) per **4. running a step** in `~/Documents/code/planner/core.md`. Start them all, then collect them. The worker prompt passes `catalog=<path>` and the ticket id or link, and the worker:
 
-1. If it comes from an external source: `get` it per `planner/sources.md` and write/update the ticket note (create from `raw/templates/ticket.md` if needed).
-2. Invoke the ticket's planner (frontmatter `planner`, default: the calling planner) in **ticket mode** as a `standard`-tier worker per **4. running a step** in `~/Documents/code/planner/core.md` (name it `<ticket-id>-plan`) — it writes `## plan` and sets `status: planned`.
+1. If the ticket comes from an external source, `get`s it per `planner/sources.md` and writes or updates the ticket note (create from `raw/templates/ticket.md` if needed).
+2. Plans it as the ticket's planner (frontmatter `planner`, default: the calling planner) in **ticket mode**: writes `## plan` and sets `status: planned`.
+3. Writes `<ticket folder>/plan.result.md`, at most 5 lines: title, steps (target → tier), confidence, needs_human.
+
+Tier: `fast` when the ticket's title or labels (from step 1) clearly map to one pipeline option; `standard` otherwise. Read only the `plan.result.md` files, never the ticket body or the fetched data; the approval summary in step 4 is built from them.
 
 Tickets already past `planned` are not re-planned.
 

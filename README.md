@@ -8,9 +8,6 @@ Personal dotfiles managed with [GNU Stow](https://www.gnu.org/software/stow/).
 - `ghostty` — `~/.config/ghostty/config`
 - `nvim` — `~/.config/nvim/`
 - `zsh` — `~/.zshrc`
-- `herdr` — `~/.config/herdr/config.toml`
-- `herdr-app` — `~/.config/herdr-app/` (`settings.json`, `keys.json`, own `agent-jump-*` mods; everything else there is written by Herdr)
-- `herdr-core` — `~/.config/herdr-core/templates/` (`fast`, `standard`, `deep` worker templates for `hc run`; see [Model tiers](#model-tiers))
 - `claude` — `~/.claude/commands/` (global Claude Code slash commands)
 - `opencode` — `~/.config/opencode/` and `~/.opencode/commands/` (OpenCode config + slash commands)
 
@@ -65,13 +62,15 @@ Headless use (for a future trigger): `claude -p "/solutions process today's tick
 
 Plan steps carry a tier that sets the model and effort of the worker that runs them:
 
-| tier | Claude Code | hc template (Herdr) | OpenCode (`agents` in `opencode.json`) |
-|------|-------------|---------------------|------------------------------------------|
-| fast | haiku, low effort | `fast` | `fast` → `opencode/claude-haiku-5-5` |
-| standard | sonnet, medium effort | `standard` | `standard` → `opencode/claude-sonnet-5-5` |
-| deep | opus, high effort | `deep` | `deep` → `opencode/claude-opus-5-5` |
+| tier | Claude Code | OpenCode (`agents` in `opencode.json`) |
+|------|-------------|------------------------------------------|
+| fast | haiku, low effort | `fast` → `opencode/claude-haiku-5-5` |
+| standard | sonnet, medium effort | `standard` → `opencode/claude-sonnet-5-5` |
+| deep | opus, high effort | `deep` → `opencode/claude-opus-5-5` |
 
-Inside Herdr, each step runs as its own `claude` started with `hc run <tier>` (templates in `herdr-core/`), so workers show up under the orchestrator in Herdr's agents list where you can peek at them. Elsewhere (no Herdr, OpenCode, teammates) steps run as in-process subagents with the same model and effort.
+The work orchestrator itself runs on sonnet at low effort: `claude --model sonnet --effort low`, or for OpenCode `~/Documents/code/opencode.json` (`"model": "opencode/claude-sonnet-5-5#low"`). `~/Documents/code/automation/work-morning.sh [--claudecode | --opencode]` starts it.
+
+In Rex with Claude Code, each step runs as its own `claude` tab started by `~/Documents/code/automation/rex-worker.sh` (see `automation/workers.md`), so you can switch to a worker to watch or answer it. Elsewhere (no Rex, OpenCode, teammates) steps run as in-process subagents with the same model and effort.
 
 ### Tickets hold all per-case files
 
@@ -119,9 +118,6 @@ stow --no-folding --target=$HOME zsh
 stow --no-folding --target=$HOME claude
 stow --no-folding --target=$HOME opencode
 stow --no-folding --target=$HOME ghostty
-stow --no-folding --target=$HOME herdr
-stow --no-folding --target=$HOME herdr-app
-stow --no-folding --target=$HOME herdr-core
 ```
 
 This gives you `/assistant` and `/solutions` in `~/.claude/commands/` and `~/.opencode/commands/`. No second stow pass is needed — work-only shims are gone.
@@ -268,7 +264,6 @@ unlink ~/.config/starship.toml
 rm -rf ~/.config/nvim
 unlink ~/.zshrc
 rm ~/.zshrc                       # if it's a regular file
-rm ~/.config/herdr-app/settings.json ~/.config/herdr-app/keys.json   # Herdr's defaults; quit Herdr first or it recreates them
 ```
 
 ### 4. Stow the configs
@@ -281,12 +276,19 @@ stow --no-folding --target=$HOME zsh
 stow --no-folding --target=$HOME claude
 stow --no-folding --target=$HOME opencode
 stow --no-folding --target=$HOME ghostty
-stow --no-folding --target=$HOME herdr
-stow --no-folding --target=$HOME herdr-app
-stow --no-folding --target=$HOME herdr-core
 ```
 
 This creates symlinks from `$HOME` back into `~/.dotfiles/`.
+
+### Leaving Herdr
+
+The `herdr`, `herdr-app` and `herdr-core` packages are gone (Rex replaced Herdr). On a machine that had them stowed, after `git pull` run:
+
+```bash
+zsh ~/.dotfiles/cleanup-herdr.zsh
+```
+
+It deletes the now-broken symlinks and Herdr's OpenCode plugins (`herdr-opencode/`, `herdr-tui-session.js`, `plugins/herdr-agent-state.js`, and their entries in `cli.json` / `tui.jsonc`), then lists Herdr's own folders for you to delete once Herdr is uninstalled.
 
 ---
 

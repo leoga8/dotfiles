@@ -42,7 +42,6 @@ INSTALLS=(
   "brew install jq"
   "brew install fzf"
   "brew install fd"
-  "brew install herdr"
   "brew install nvim"
   "brew install fastfetch"
   "brew install lazygit"

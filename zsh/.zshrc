@@ -19,13 +19,9 @@ fcd () {
 	[[ -n "$dir" ]] && cd -- "$dir"
 }
 
-# Clear a stale OpenCode agent label stuck in the herdr TUI after /exit
-herdr-release-agent () {
-	herdr pane release-agent --source herdr:opencode --agent opencode "$(herdr pane current | jq -r '.result.pane.pane_id')"
-}
-
-# Clear a stale OpenCode agent label stuck in Herdr App (herdr-core) after /exit
-hc-clear-agent () {
+# Clear a stale agent status (e.g. OpenCode's after /exit) from this terminal.
+# Sends the program status "clear" sequence, which Rex understands.
+agent-status-clear () {
 	printf '\033]7501;state=clear\033\\'
 }
 ######################
