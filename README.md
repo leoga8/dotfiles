@@ -64,9 +64,9 @@ Plan steps carry a tier that sets the model and effort of the worker that runs t
 
 | tier | Claude Code | OpenCode (`agents` in `opencode.json`) |
 |------|-------------|------------------------------------------|
-| fast | haiku, low effort | `fast` → `opencode/claude-haiku-5-5` |
-| standard | sonnet, medium effort | `standard` → `opencode/claude-sonnet-5-5` |
-| deep | opus, high effort | `deep` → `opencode/claude-opus-5-5` |
+| fast | haiku, low effort | `fast` → `opencode/claude-haiku-5-5#low` |
+| standard | sonnet, medium effort | `standard` → `opencode/claude-sonnet-5-5#medium` |
+| deep | opus, high effort | `deep` → `opencode/claude-opus-5-5#high` |
 
 The work orchestrator itself runs on sonnet at low effort: `claude --model sonnet --effort low`, or for OpenCode `~/Documents/code/opencode.json` (`"model": "opencode/claude-sonnet-5-5#low"`). `~/Documents/code/automation/work-morning.sh [--claudecode | --opencode]` starts it.
 
