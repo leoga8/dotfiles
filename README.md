@@ -67,7 +67,7 @@ Plan steps carry a tier that sets the model and effort of the worker that runs t
 | standard | sonnet, medium effort | `standard` → `openai/gpt-6-sol#medium` (ChatGPT subscription) |
 | deep | opus, high effort | `deep` → `anthropic/claude-opus-5-5#high` (Anthropic API key) |
 
-The work orchestrator itself runs on sonnet at low effort: `claude --model sonnet --effort low`, or for OpenCode `~/Documents/code/opencode.json` (`"model": "opencode/claude-sonnet-5-5#low"`). `~/Documents/code/automation/work-morning.sh [--claudecode | --opencode]` starts it.
+The work orchestrator itself runs at low effort: on sonnet in Claude Code (`claude --model sonnet --effort low`), and on GPT-6 Sol in OpenCode, set by `~/Documents/code/opencode.json` (`"model": "openai/gpt-6-sol#low"`, stowed from the `opencode` package). `~/Documents/code/automation/work-morning.sh [--claudecode | --opencode]` starts it.
 
 In Rex, each step runs as its own tab, running the same agent as the orchestrator (Claude Code, or OpenCode with the tier agent's model), started by `~/Documents/code/automation/rex-worker.sh` (see `automation/workers.md`), so you can switch to a worker to watch or answer it. Elsewhere (no Rex, teammates) steps run as in-process subagents with the same model and effort.
 
