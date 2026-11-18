@@ -1,1 +1,1 @@
-@~/Documents/code/planner/solutions/prompts/solutions.md
+@~/Documents/code/planner/work/prompts/work.md
