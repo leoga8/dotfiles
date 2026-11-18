@@ -14,7 +14,7 @@ Personal dotfiles managed with [GNU Stow](https://www.gnu.org/software/stow/).
 
 ## Automation: planners, pipelines, workflows
 
-The automation logic lives **outside this repo** at `~/Documents/code/` (local to each machine, no git). This repo tracks two one-line shims plus **reference copies** of the essential planner and state-machine files under `examples/` (see [Recreate the planner + state machine](#recreate-the-planner--state-machine)).
+The automation logic lives **outside this repo** at `~/Documents/code/`, which is its own git repo, [agent-workspace](https://github.com/leoga8/agent-workspace) (private). It tracks only the framework, and job content stays local to each machine. This repo tracks the one-line slash-command shims that point into it. To set up `~/Documents/code` on a new machine, follow the agent-workspace README.
 
 ### Layers
 
@@ -37,7 +37,7 @@ Each layer is a **flat top-level sibling**, split by domain inside. Layers are n
 │   ├── core.md         # shared rules: discovery, modes, ticket + plan formats, model tiers, drafts
 │   ├── sources.md      # how to fetch / comment / set status: manual, linear, helpscout
 │   ├── assistant/      # personal planner  → /assistant   (prompts/, config.md)
-│   └── solutions/      # work planner      → /solutions   (prompts/, config.md, + shared-repo files)
+│   └── work/           # work planner      → /work (+ /solutions alias)   (prompts/, config.md, + shared-repo files; not in git)
 ├── orchestration/      # personal only — never shared
 │   ├── state-machine.md
 │   └── tickets/        # process a set of tickets
@@ -49,13 +49,14 @@ Each layer is a **flat top-level sibling**, split by domain inside. Layers are n
 | shim | planner | scope |
 |------|---------|-------|
 | `/assistant` | `planner/assistant` | personal — domains and vault in `planner/assistant/config.md` |
-| `/solutions` | `planner/solutions` | work — domains, vault and ticket sources in `planner/solutions/config.md` |
+| `/work` | `planner/work` | work — domains, vault and ticket sources in `planner/work/config.md` |
+| `/solutions` | `planner/work` | alias of `/work`; the name teammates use in the shared repo |
 
-Talk to them in natural language (`/assistant write tests for src/foo.py`, `/solutions process today's tickets`). On every call a planner globs `~/Documents/code/*/**/prompts/*.md` and reads each file's `# title`, `>` description and optional `tier`/`approval` frontmatter, so **new workflows, pipelines, planners and orchestrations need no new shims** — only their domain listed in the planner config. With no request it shows a menu of everything in scope, including creating new workflows/pipelines/planners/orchestrations (via the `meta` scaffold).
+Talk to them in natural language (`/assistant write tests for src/foo.py`, `/work process today's tickets`). On every call a planner globs `~/Documents/code/*/**/prompts/*.md` and reads each file's `# title`, `>` description and optional `tier`/`approval` frontmatter, so **new workflows, pipelines, planners and orchestrations need no new shims** — only their domain listed in the planner config. With no request it shows a menu of everything in scope, including creating new workflows/pipelines/planners/orchestrations (via the `meta` scaffold).
 
-Both shims are shared on every machine. A machine without a planner's content (e.g. `/solutions` on the personal laptop) simply has nothing in scope for it. A new planner = new shim pair, created by the `new-planner` scaffold.
+Both shims are shared on every machine. A machine without a planner's content (e.g. `/work` on the personal laptop) simply has nothing in scope for it. A new planner = new shim pair, created by the `new-planner` scaffold.
 
-Headless use (for a future trigger): `claude -p "/solutions process today's tickets"`.
+Headless use (for a future trigger): `claude -p "/work process today's tickets"`.
 
 ### Model tiers
 
@@ -88,9 +89,9 @@ In Rex, each step runs as its own tab, running the same agent as the orchestrato
 
 ### Shared team repo (`solutions-workflows`)
 
-Teammates get `/solutions` only: `planner/core.md`, `planner/sources.md`, the solutions planner, and the in-scope pipelines and workflows. Never shared: `/assistant`, `orchestration/`, configs, tickets, `_archive/`, any future trigger. Their setup guide is `planner/solutions/INSTALL.md` (synced to the repo root).
+Teammates get `/solutions` only: `planner/core.md`, `planner/sources.md`, the work planner (renamed back to `solutions` by the sync), and the in-scope pipelines and workflows. Never shared: `/assistant`, `orchestration/`, configs, tickets, `_archive/`, any future trigger. Their setup guide is `planner/work/INSTALL.md` (synced to the repo root).
 
-To share changes: on the work laptop, `/solutions sync the shared repo` (runs `workflows/meta/sync-shared-repo`) → review the staged diff in the repo → `git commit` and `git push` yourself.
+To share changes: on the work laptop, `/work sync the shared repo` (runs `workflows/meta/sync-shared-repo`) → review the staged diff in the repo → `git commit` and `git push` yourself.
 
 ---
 
@@ -102,8 +103,9 @@ To share changes: on the work laptop, `/solutions sync the shared repo` (runs `w
 
 | location | what it contains | managed by |
 |----------|-----------------|------------|
-| `~/.dotfiles/` | starship, nvim, zsh, `/assistant` + `/solutions` shims, opencode config | git (this repo, pull-only on work) |
-| `~/Documents/code/` | workflows, pipelines, planner, orchestration | local to the machine |
+| `~/.dotfiles/` | starship, nvim, zsh, `/assistant` + `/work` + `/solutions` shims, opencode config | git (this repo, pull-only on work) |
+| `~/Documents/code/` | framework: planner core, orchestration, automation, generic workflows and pipelines | git ([agent-workspace](https://github.com/leoga8/agent-workspace)) |
+| `~/Documents/code/` job folders | `planner/work/`, `workflows/solutions/`, `pipelines/{csp,onboard,rate-card}/`, configs | local to the machine (ignored by git) |
 | `~/Documents/code/obsidian/leo-work-os/` | work Obsidian vault (tickets live in `raw/tickets/`) | local to the machine |
 
 ### step 1 — clone dotfiles and stow
@@ -118,26 +120,17 @@ stow --no-folding --target=$HOME claude
 stow --no-folding --target=$HOME opencode
 ```
 
-This gives you `/assistant` and `/solutions` in `~/.claude/commands/` and `~/.opencode/commands/`. No second stow pass is needed — work-only shims are gone.
+This gives you `/assistant`, `/work` and `/solutions` in `~/.claude/commands/` and `~/.opencode/commands/`. No second stow pass is needed — work-only shims are gone.
 
 The `opencode` package also links `~/Documents/code/opencode.json`, which sets the work orchestrator's OpenCode model (`openai/gpt-6-sol#low`, ChatGPT subscription) for sessions started in `~/Documents/code`. OpenCode's TUI has no model flag, so `work-morning.sh --opencode` relies on it. On a machine without an OpenAI login, pick another model in OpenCode.
 
-### step 2 — transfer ~/Documents/code/
+### step 2 — ~/Documents/code/
 
-Transfer `~/Documents/code/` to the work machine. Expected top-level structure:
-
-```
-~/Documents/code/
-├── obsidian/leo-work-os/   # work Obsidian vault
-├── workflows/              # incl. solutions/ (csp-docs, customer-onboarding, rate-cards)
-├── pipelines/              # incl. csp/, onboard/, rate-card/
-├── planner/                # core.md, sources.md, assistant/, solutions/
-└── orchestration/          # state-machine.md, tickets/
-```
+Clone (or, if the folder already has job content, adopt in place) [agent-workspace](https://github.com/leoga8/agent-workspace), then run `~/Documents/code/setup.zsh --check`. Its README has both procedures. The job content (`planner/work/`, `workflows/solutions/`, `pipelines/{csp,onboard,rate-card}/`, the vault) isn't in git. Transfer it from the old work laptop, or rebuild it at a new job.
 
 ### step 3 — planner config
 
-Edit `~/Documents/code/planner/solutions/config.md`:
+Edit `~/Documents/code/planner/work/config.md`:
 
 ```
 - **root:** ~/Documents/code
@@ -149,7 +142,7 @@ Edit `~/Documents/code/planner/solutions/config.md`:
 
 `domains` must match the folder names under `workflows/` and `pipelines/` for the work pipelines.
 
-If there is nothing to transfer in step 2, follow [Recreate the planner + state machine](#recreate-the-planner--state-machine) first. It starts from `examples/code/planner/solutions/config.example.md`, which already has these values.
+`setup.zsh` creates `config.md` from `config.example.md` when it's missing.
 
 ### step 4 — MCP setup
 
@@ -177,63 +170,9 @@ Claude Code MCPs are enabled org-wide via Hologram's Claude settings — no manu
 ### new job / new work laptop
 
 1. Follow steps 1–3 above
-2. For the vault: `/solutions set up a new work vault` → routes to obsidian vault-setup (greenfield) — scaffolds the vault including `raw/tickets/` and `raw/runs/`
+2. For the vault: `/work set up a new work vault` (or let `setup.zsh` scaffold it from `vault_path`) → routes to obsidian vault-setup (greenfield) — scaffolds the vault including `raw/tickets/` and `raw/runs/`
 3. For work-specific workflows: rebuild the static `context/` reference files in `workflows/solutions/*` with the new employer's context
-4. Set `vault_path` in `planner/solutions/config.md`
-
----
-
-## Recreate the planner + state machine
-
-> Use this on any machine (personal or work) where `~/Documents/code/` doesn't exist yet. Point Claude at this section and it can follow it step by step. `examples/` is reference only: it is never stowed, and real configs, tickets, secrets and work-domain content never go in it.
-
-### what's in `examples/`
-
-```
-examples/
-├── code/                                  # mirrors ~/Documents/code/
-│   ├── planner/
-│   │   ├── core.md                        # shared rules: discovery, modes, ticket + plan formats, tiers, drafts
-│   │   ├── sources.md                     # manual / linear / helpscout: get, comment, set status
-│   │   ├── assistant/{prompts/assistant.md, config.example.md}
-│   │   └── solutions/{prompts/solutions.md, config.example.md}
-│   ├── orchestration/
-│   │   ├── state-machine.md               # ticket statuses, transitions, drafts/approval rules
-│   │   └── tickets/prompts/tickets.md     # processes a set of tickets through planners
-│   ├── workflows/meta/new-{workflow,pipeline,planner,orchestration}/prompts/*.md
-│   └── pipelines/meta/scaffold/prompts/scaffold.md
-├── vault/raw/templates/ticket.md          # ticket note template for the vault
-└── secrets.example                        # ~/.secrets placeholders (work only)
-```
-
-The scaffold's `sync-shared-repo` option is work-only and isn't included. Add it on the work laptop.
-
-### steps
-
-1. **Check first.** If `~/Documents/code/planner/core.md` already exists, stop: this machine already has its files.
-2. **Copy the examples in** without overwriting anything:
-   ```bash
-   mkdir -p ~/Documents/code
-   cp -Rn ~/.dotfiles/examples/code/ ~/Documents/code/
-   ```
-   On a work machine without orchestration, delete `~/Documents/code/orchestration/` (and `planner/assistant/` if you don't want it there).
-3. **Create each planner config** you use on this machine and fill in `vault_path` (and `domains` if needed):
-   ```bash
-   cp ~/Documents/code/planner/assistant/config.example.md ~/Documents/code/planner/assistant/config.md
-   cp ~/Documents/code/planner/solutions/config.example.md ~/Documents/code/planner/solutions/config.md
-   ```
-   Placeholders are fine to leave: the planner asks for any missing value on first run and saves it.
-4. **Vault.** The planner and state machine expect these in `<vault_path>`:
-   - `AGENTS.md` (vault structure and schemas, read in question mode)
-   - `raw/tickets/`, `raw/runs/`, `raw/daily/YYYY/MM/`
-   - `raw/templates/daily.md` with a `## tickets` section (orchestration reads it for "today's tickets")
-   - `raw/templates/ticket.md`: copy it from `examples/vault/raw/templates/ticket.md`
-
-   For a brand-new vault, scaffold it with the obsidian `vault-setup` workflow if present, or `/assistant create a workflow` for one.
-5. **Rebuild domain workflows and pipelines** (`obsidian`, `code`, `database`, work domains) as needed with `/assistant create a workflow ...` or `/assistant create a pipeline ...`. Each new domain must also be listed in the planner's `domains`.
-6. **Verify:**
-   - `claude -p "/assistant"` (or `/solutions`) shows the menu, including **process tickets** when `orchestration/` exists
-   - `/assistant track setup smoke test` creates `<tickets_path>/<id>/<id>.md` with `status: new`. Delete that folder afterwards.
+4. Set `vault_path` in `planner/work/config.md`, and add the new job's terms to `automation/safety-terms.txt`
 
 ---
 
@@ -322,23 +261,6 @@ git add .
 git commit -m "describe what changed"
 git push
 ```
-
-### keeping examples current
-
-After changing any of the essential files in `~/Documents/code/`, copy them back into `examples/` and commit:
-
-```bash
-cd ~/Documents/code
-for f in planner/core.md planner/sources.md \
-         planner/assistant/prompts/assistant.md planner/solutions/prompts/solutions.md \
-         orchestration/state-machine.md orchestration/tickets/prompts/tickets.md \
-         workflows/meta/new-{workflow,pipeline,planner,orchestration}/prompts/*.md \
-         pipelines/meta/scaffold/prompts/scaffold.md; do
-  cp "$f" ~/.dotfiles/examples/code/"$f"
-done
-```
-
-Never copy the real `config.md` files: edit the `config.example.md` files in `examples/` directly.
 
 To pull updates on another machine:
 
