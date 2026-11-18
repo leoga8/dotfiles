@@ -122,7 +122,7 @@ stow --no-folding --target=$HOME ghostty
 
 This gives you `/assistant` and `/solutions` in `~/.claude/commands/` and `~/.opencode/commands/`. No second stow pass is needed — work-only shims are gone.
 
-Work laptop only: `stow --no-folding --target=$HOME opencode-work`. It links `~/Documents/code/opencode.json`, which sets the work orchestrator's OpenCode model (`openai/gpt-6-sol#low`, ChatGPT subscription) for sessions started in `~/Documents/code`. OpenCode's TUI has no model flag, so `work-morning.sh --opencode` relies on it. Skip it on machines without an OpenAI login and pick the model in OpenCode instead.
+Also `stow --no-folding --target=$HOME opencode-work`. It links `~/Documents/code/opencode.json`, which sets the work orchestrator's OpenCode model (`openai/gpt-6-sol#low`, ChatGPT subscription) for sessions started in `~/Documents/code`. OpenCode's TUI has no model flag, so `work-morning.sh --opencode` relies on it. On a machine without an OpenAI login, pick another model in OpenCode.
 
 ### step 2 — transfer ~/Documents/code/
 
