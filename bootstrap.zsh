@@ -23,7 +23,6 @@ fi
 
 INSTALLS=(
   "brew install --cask rectangle"
-  "brew install --cask ghostty"
   "brew install --cask warp"
   # "brew install --cask dbeaver-community"
   "brew install --cask spotify"
