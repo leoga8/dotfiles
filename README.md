@@ -122,7 +122,7 @@ stow --no-folding --target=$HOME ghostty
 
 This gives you `/assistant` and `/solutions` in `~/.claude/commands/` and `~/.opencode/commands/`. No second stow pass is needed — work-only shims are gone.
 
-Also `stow --no-folding --target=$HOME opencode-work`. It links `~/Documents/code/opencode.json`, which sets the work orchestrator's OpenCode model (`openai/gpt-6-sol#low`, ChatGPT subscription) for sessions started in `~/Documents/code`. OpenCode's TUI has no model flag, so `work-morning.sh --opencode` relies on it. On a machine without an OpenAI login, pick another model in OpenCode.
+The `opencode` package also links `~/Documents/code/opencode.json`, which sets the work orchestrator's OpenCode model (`openai/gpt-6-sol#low`, ChatGPT subscription) for sessions started in `~/Documents/code`. OpenCode's TUI has no model flag, so `work-morning.sh --opencode` relies on it. On a machine without an OpenAI login, pick another model in OpenCode.
 
 ### step 2 — transfer ~/Documents/code/
 
@@ -281,16 +281,6 @@ stow --no-folding --target=$HOME ghostty
 ```
 
 This creates symlinks from `$HOME` back into `~/.dotfiles/`.
-
-### Leaving Herdr
-
-The `herdr`, `herdr-app` and `herdr-core` packages are gone (Rex replaced Herdr). On a machine that had them stowed, after `git pull` run:
-
-```bash
-zsh ~/.dotfiles/cleanup-herdr.zsh
-```
-
-It deletes the now-broken symlinks and Herdr's OpenCode plugins (`herdr-opencode/`, `herdr-tui-session.js`, `plugins/herdr-agent-state.js`, and their entries in `cli.json` / `tui.jsonc`), then lists Herdr's own folders for you to delete once Herdr is uninstalled.
 
 ---
 
