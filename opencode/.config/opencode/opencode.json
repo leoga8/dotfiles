@@ -16,7 +16,7 @@
     "deep": {
       "description": "Deep-tier subagent for ambiguous, multi-file or high-risk planner steps (tier: deep).",
       "mode": "subagent",
-      "model": "opencode/claude-opus-5-5#high"
+      "model": "anthropic/claude-opus-5-5#high"
     }
   },
   "mcp": {
