@@ -25,7 +25,6 @@ if [[ $(uname) == "Darwin" ]]; then
 		"yes | brew upgrade --cask warp"
 		"yes | brew upgrade --cask spotify"
 		"yes | brew upgrade --cask brave-browser"
-		"yes | brew upgrade opencode"
 		"yes | brew upgrade --cask claude-code"
 		"yes | brew upgrade --cask claude"
 		# "yes | brew upgrade --cask dbeaver-community"
@@ -35,8 +34,8 @@ if [[ $(uname) == "Darwin" ]]; then
 		"brew doctor"
 		# Uninstall dependencies no longer needed
 		"brew autoremove"
-		# Upgrade pip for the active pyenv Python
-		"pip3 install --upgrade pip"
+		# Trim uv's package cache (uv itself upgrades with brew)
+		"uv cache prune"
 	)
 else
 	# Debian/Raspbian
@@ -49,8 +48,9 @@ else
 		"sudo apt-get upgrade -y"
 		# Remove packages not needed
 		"sudo apt autoremove -y"
-		# Upgrade pip for the active pyenv Python
-		"pip3 install --upgrade pip"
+		# uv (installed with its own installer here): upgrade it and trim its cache
+		"uv self update"
+		"uv cache prune"
 	)
 fi
 
