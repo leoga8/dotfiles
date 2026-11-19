@@ -1,22 +1,22 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "model": "openai/gpt-6-sol",
+  "model": "claude-agent/sonnet",
   "autoupdate": true,
   "agents": {
     "fast": {
       "description": "Fast-tier subagent for simple, low-risk planner steps (tier: fast).",
       "mode": "subagent",
-      "model": "openai/gpt-6-luna#low"
+      "model": "claude-agent/haiku#low"
     },
     "standard": {
       "description": "Standard-tier subagent for most planner steps (tier: standard).",
       "mode": "subagent",
-      "model": "openai/gpt-6-sol#medium"
+      "model": "claude-agent/sonnet#medium"
     },
     "deep": {
       "description": "Deep-tier subagent for ambiguous, multi-file or high-risk planner steps (tier: deep).",
       "mode": "subagent",
-      "model": "anthropic/claude-opus-5-5#high"
+      "model": "claude-agent/opus#high"
     }
   },
   "mcp": {

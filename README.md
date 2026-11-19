@@ -64,11 +64,13 @@ Plan steps carry a tier that sets the model and effort of the worker that runs t
 
 | tier | Claude Code | OpenCode (`agents` in `opencode.json`) |
 |------|-------------|------------------------------------------|
-| fast | haiku, low effort | `fast` → `openai/gpt-6-luna#low` (ChatGPT subscription; needs `opencode auth login` with OpenAI) |
-| standard | sonnet, medium effort | `standard` → `openai/gpt-6-sol#medium` (ChatGPT subscription) |
-| deep | opus, high effort | `deep` → `anthropic/claude-opus-5-5#high` (Anthropic API key) |
+| fast | haiku, low effort | `fast` → `claude-agent/haiku#low` |
+| standard | sonnet, medium effort | `standard` → `claude-agent/sonnet#medium` |
+| deep | opus, high effort | `deep` → `claude-agent/opus#high` |
 
-The work orchestrator itself runs at low effort: on sonnet in Claude Code (`claude --model sonnet --effort low`), and on GPT-6 Sol in OpenCode, set by `~/Documents/code/opencode.json` (`"model": "openai/gpt-6-sol#low"`, stowed from the `opencode` package). `~/Documents/code/automation/work-morning.sh [--claudecode | --opencode]` starts it.
+OpenCode reaches Claude through the **Claude Agent** login (`opencode auth login`, then Claude Agent), which uses the Anthropic subscription: no API key. It only offers the aliases (`haiku`, `sonnet`, `opus`, `fable`), which resolve to the latest models; full ids like `claude-opus-5-5` are unavailable. OpenCode and Claude Code share the subscription's usage. If it runs out, pick an OpenAI model in OpenCode by hand (needs the ChatGPT login).
+
+The work orchestrator itself runs at low effort: on sonnet in Claude Code (`claude --model sonnet --effort low`), and on the same model in OpenCode, set by `~/Documents/code/opencode.json` (`"model": "claude-agent/sonnet#low"`, stowed from the `opencode` package). `~/Documents/code/automation/work-morning.sh [--claudecode | --opencode]` starts it.
 
 In Rex, each step runs as its own tab, running the same agent as the orchestrator (Claude Code, or OpenCode with the tier agent's model), started by `~/Documents/code/automation/rex-worker.sh` (see `automation/workers.md`), so you can switch to a worker to watch or answer it. Elsewhere (no Rex, teammates) steps run as in-process subagents with the same model and effort.
 
@@ -122,7 +124,7 @@ stow --no-folding --target=$HOME opencode
 
 This gives you `/assistant`, `/work` and `/solutions` in `~/.claude/commands/` and `~/.opencode/commands/`. No second stow pass is needed — work-only shims are gone.
 
-The `opencode` package also links `~/Documents/code/opencode.json`, which sets the work orchestrator's OpenCode model (`openai/gpt-6-sol#low`, ChatGPT subscription) for sessions started in `~/Documents/code`. OpenCode's TUI has no model flag, so `work-morning.sh --opencode` relies on it. On a machine without an OpenAI login, pick another model in OpenCode.
+The `opencode` package also links `~/Documents/code/opencode.json`, which sets the work orchestrator's OpenCode model (`claude-agent/sonnet#low`) for sessions started in `~/Documents/code`. OpenCode's TUI has no model flag, so `work-morning.sh --opencode` relies on it. It needs the Claude Agent login in OpenCode.
 
 ### step 2 — ~/Documents/code/
 
