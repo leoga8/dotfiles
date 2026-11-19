@@ -27,6 +27,7 @@ if [[ $(uname) == "Darwin" ]]; then
 		"yes | brew upgrade --cask brave-browser"
 		"yes | brew upgrade --cask claude-code"
 		"yes | brew upgrade --cask claude"
+		"yes | brew upgrade opencode"
 		# "yes | brew upgrade --cask dbeaver-community"
 		# Cleanup space
 		"brew cleanup --prune=all"
