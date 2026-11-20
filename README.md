@@ -38,10 +38,9 @@ Each layer is a **flat top-level sibling**, split by domain inside. Layers are n
 │   ├── sources.md      # how to fetch / comment / set status: manual, linear, helpscout
 │   ├── assistant/      # personal planner  → /assistant   (prompts/, config.md)
 │   └── work/           # work planner      → /work (+ /solutions alias)   (prompts/, config.md, + shared-repo files; not in git)
-├── orchestration/      # personal only — never shared
-│   ├── state-machine.md
-│   └── tickets/        # process a set of tickets
-└── _archive/           # retired content (old cases pipeline, reports, customer files) — moved, never deleted
+└── orchestration/      # personal only — never shared
+    ├── state-machine.md
+    └── tickets/        # process a set of tickets
 ```
 
 ### Planners are the only slash commands
@@ -91,7 +90,7 @@ In Rex, each step runs as its own tab, running the same agent as the orchestrato
 
 ### Shared team repo (`solutions-workflows`)
 
-Teammates get `/solutions` only: `planner/core.md`, `planner/sources.md`, the work planner (renamed back to `solutions` by the sync), and the in-scope pipelines and workflows. Never shared: `/assistant`, `orchestration/`, configs, tickets, `_archive/`, any future trigger. Their setup guide is `planner/work/INSTALL.md` (synced to the repo root).
+Teammates get `/solutions` only: `planner/core.md`, `planner/sources.md`, the work planner (renamed back to `solutions` by the sync), and the in-scope pipelines and workflows. Never shared: `/assistant`, `orchestration/`, configs, tickets, any future trigger. Their setup guide is `planner/work/INSTALL.md` (synced to the repo root).
 
 To share changes: on the work laptop, `/work sync the shared repo` (runs `workflows/meta/sync-shared-repo`) → review the staged diff in the repo → `git commit` and `git push` yourself.
 
