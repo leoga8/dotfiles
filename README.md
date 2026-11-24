@@ -14,85 +14,10 @@ Personal dotfiles managed with [GNU Stow](https://www.gnu.org/software/stow/).
 
 ## Automation: planners, pipelines, workflows
 
-The automation logic lives **outside this repo** at `~/Documents/code/`, which is its own git repo, [agent-workspace](https://github.com/leoga8/agent-workspace) (private). It tracks only the framework, and job content stays local to each machine. This repo tracks the one-line slash-command shims that point into it. To set up `~/Documents/code` on a new machine, follow the agent-workspace README.
+The automation logic lives **outside this repo** at `~/Documents/code/`, its own git repo, [agent-workspace](https://github.com/leoga8/agent-workspace) (private). This repo tracks only the one-line slash-command shims that point into it, and the OpenCode config.
 
-### Layers
+For the layers, planners, model tiers, tickets and the shared team repo, see "how it fits together" in `~/Documents/code/README.md`. Session rules for every agent are in `~/Documents/code/RULES.md`.
 
-| layer | what it is | lives in |
-|-------|-----------|----------|
-| workflow | one atomic task (e.g. `test`, `query`) | `workflows/<domain>/<name>/` |
-| pipeline | runs one or more workflows (menu-driven or sequential) | `pipelines/<domain>/...` |
-| planner | natural-language entry point — discovers what exists and routes a request or ticket to it, picking a model tier per step | `planner/<name>/` |
-| orchestration | runs a set of tickets through planners with a state machine; drafts outbound updates | `orchestration/<name>/` |
-| trigger | *(future, separate repo)* external automation (e.g. n8n) that calls a planner headlessly | — |
-
-Each layer is a **flat top-level sibling**, split by domain inside. Layers are not nested by call order: pipelines still work without a planner, planners/orchestration are cross-domain, and new layers never move existing paths.
-
-```
-~/Documents/code/
-├── workflows/          # by domain: obsidian, code, database, meta (+ solutions on the work laptop)
-│   └── <domain>/<name>/{prompts,context,tools}   # context/ = static reference only; no data/ folders
-├── pipelines/          # by domain, prompts only: obsidian, code (+ implement, develop), database, meta/scaffold
-├── planner/
-│   ├── core.md         # shared rules: discovery, modes, ticket + plan formats, model tiers, drafts
-│   ├── sources.md      # how to fetch / comment / set status: manual, linear, helpscout
-│   ├── assistant/      # personal planner  → /assistant   (prompts/, config.md)
-│   └── work/           # work planner      → /work (+ /solutions alias)   (prompts/, config.md, + shared-repo files; not in git)
-└── orchestration/      # personal only — never shared
-    ├── state-machine.md
-    └── tickets/        # process a set of tickets
-```
-
-### Planners are the only slash commands
-
-| shim | planner | scope |
-|------|---------|-------|
-| `/assistant` | `planner/assistant` | personal — domains and vault in `planner/assistant/config.md` |
-| `/work` | `planner/work` | work — domains, vault and ticket sources in `planner/work/config.md` |
-| `/solutions` | `planner/work` | alias of `/work`; the name teammates use in the shared repo |
-
-Talk to them in natural language (`/assistant write tests for src/foo.py`, `/work process today's tickets`). On every call a planner globs `~/Documents/code/*/**/prompts/*.md` and reads each file's `# title`, `>` description and optional `tier`/`approval` frontmatter, so **new workflows, pipelines, planners and orchestrations need no new shims** — only their domain listed in the planner config. With no request it shows a menu of everything in scope, including creating new workflows/pipelines/planners/orchestrations (via the `meta` scaffold).
-
-Both shims are shared on every machine. A machine without a planner's content (e.g. `/work` on the personal laptop) simply has nothing in scope for it. A new planner = new shim pair, created by the `new-planner` scaffold.
-
-Headless use (for a future trigger): `claude -p "/work process today's tickets"`.
-
-### Model tiers
-
-Plan steps carry a tier that sets the model and effort of the worker that runs them:
-
-| tier | Claude Code | OpenCode (`agents` in `opencode.json`) |
-|------|-------------|------------------------------------------|
-| fast | haiku, low effort | `fast` → `claude-agent/haiku#low` |
-| standard | sonnet, medium effort | `standard` → `claude-agent/sonnet#medium` |
-| deep | opus, high effort | `deep` → `claude-agent/opus#high` |
-
-OpenCode reaches Claude through the **Claude Agent** login (`opencode auth login`, then Claude Agent), which uses the Anthropic subscription: no API key. It only offers the aliases (`haiku`, `sonnet`, `opus`, `fable`), which resolve to the latest models; full ids like `claude-opus-5-5` are unavailable. OpenCode and Claude Code share the subscription's usage. If it runs out, pick an OpenAI model in OpenCode by hand (needs the ChatGPT login).
-
-The work orchestrator itself runs at low effort: on sonnet in Claude Code (`claude --model sonnet --effort low`), and on the same model in OpenCode, set by `~/Documents/code/opencode.json` (`"model": "claude-agent/sonnet#low"`, stowed from the `opencode` package). `~/Documents/code/automation/work-morning.sh [--claudecode | --opencode]` starts it.
-
-In Rex, each step runs as its own tab, running the same agent as the orchestrator (Claude Code, or OpenCode with the tier agent's model), started by `~/Documents/code/automation/rex-worker.sh` (see `automation/workers.md`), so you can switch to a worker to watch or answer it. Elsewhere (no Rex, teammates) steps run as in-process subagents with the same model and effort.
-
-### Tickets hold all per-case files
-
-```
-<tickets_path>/<id>/<id>.md         # ticket note + every input and output file for that ticket
-<vault>/raw/runs/YYYY-MM-DD-<slug>.md
-```
-
-`tickets_path` is set per planner config — `<vault>/raw/tickets` on your machines, `<repo>/tickets` (gitignored) for teammates.
-
-- Ids: `YYYYMMDD-<slug>` (manual) or `<source>-<external-id>` (e.g. `linear-SOL-1234`)
-- Frontmatter `status` follows `orchestration/state-machine.md`; sections `## ticket`, `## plan`, `## drafts`, `## outputs`, `## log`
-- Replaces the old `/cases` pipeline and every `data/` / `reports/` folder — workflows read inputs from and write outputs to the ticket folder; `context/` holds only static reference
-- The daily note template has a `## tickets` section; "process the tickets in today's daily note" runs them
-- **Dry run:** comments and status changes for Linear/HelpScout are written to `## drafts` and only sent after explicit approval
-
-### Shared team repo (`solutions-workflows`)
-
-Teammates get `/solutions` only: `planner/core.md`, `planner/sources.md`, the work planner (renamed back to `solutions` by the sync), and the in-scope pipelines and workflows. Never shared: `/assistant`, `orchestration/`, configs, tickets, any future trigger. Their setup guide is `planner/work/INSTALL.md` (synced to the repo root).
-
-To share changes: on the work laptop, `/work sync the shared repo` (runs `workflows/meta/sync-shared-repo`) → review the staged diff in the repo → `git commit` and `git push` yourself.
 
 ---
 
